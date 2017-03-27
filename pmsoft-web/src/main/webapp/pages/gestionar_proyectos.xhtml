@@ -182,9 +182,6 @@
 						<ace:pushButton id="dialogRolBtnCancelar"
 							action="#{projectBean.cancelAction}" label="Cancelar" rendered="#{!projectBean.visibleDelete}">
 						</ace:pushButton>
-						<ace:pushButton id="dialogRolBtnEliminar"
-							action="#{projectBean.deleteAction}" label="Eliminar" rendered="#{projectBean.visibleDelete and projectBean.visibleView}">
-						</ace:pushButton>
 						
 						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
                             <h:commandButton image="../img/btn_s_cancelar.png"
