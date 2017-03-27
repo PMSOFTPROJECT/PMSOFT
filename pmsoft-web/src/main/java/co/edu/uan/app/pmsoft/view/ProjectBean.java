@@ -195,13 +195,9 @@ public class ProjectBean implements Serializable {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
             if (tmpRowData instanceof Project) {
             	this.project = (Project) tmpRowData;
+            	deleteAction();
             }
         }
-        
-        this.visibleDelete = true;
-        this.visibleView = true;
-		this.headerDialog = "Eliminar Proyecto";
-		this.openPopup();
 		
 		logger.info("Saliendo de deleteProject(project:" + project + ")");
 
