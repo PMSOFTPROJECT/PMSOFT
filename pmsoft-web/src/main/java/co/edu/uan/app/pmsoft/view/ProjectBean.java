@@ -79,6 +79,7 @@ public class ProjectBean implements Serializable {
 		String hour = String.valueOf(Calendar.getInstance().get(Calendar.HOUR));
 		String minute = String.valueOf(Calendar.getInstance().get(Calendar.MINUTE));
 		String second = String.valueOf(Calendar.getInstance().get(Calendar.SECOND));
+		String zone = String.valueOf(Calendar.getInstance().get(Calendar.ZONE_OFFSET) / 3600000);
 		
 		this.project = new Project();
 		this.project.setVersion(1);
@@ -89,7 +90,7 @@ public class ProjectBean implements Serializable {
 		this.project.setPersonaResponsable("");
 		this.project.setPorcentaje(0);
 		this.project.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
-		this.project.setFechaCreacion(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+		this.project.setFechaCreacion(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + zone);
 		this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
 		this.project.setFechaUltimoCambio(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
 		this.project.setEstado(Constantes.ESTADO_ACTIVO);
