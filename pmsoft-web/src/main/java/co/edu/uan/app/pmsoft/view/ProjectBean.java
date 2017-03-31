@@ -1,8 +1,11 @@
 package co.edu.uan.app.pmsoft.view;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -79,6 +82,7 @@ public class ProjectBean implements Serializable {
 		String hour = String.valueOf(Calendar.getInstance().get(Calendar.HOUR));
 		String minute = String.valueOf(Calendar.getInstance().get(Calendar.MINUTE));
 		String second = String.valueOf(Calendar.getInstance().get(Calendar.SECOND));
+		String zona = String.valueOf(Calendar.getInstance().get(Calendar.ZONE_OFFSET) / 3600000);
 		
 		this.project = new Project();
 		this.project.setVersion(1);
@@ -89,7 +93,7 @@ public class ProjectBean implements Serializable {
 		this.project.setPersonaResponsable("");
 		this.project.setPorcentaje(0);
 		this.project.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
-		this.project.setFechaCreacion(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+		this.project.setFechaCreacion(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + zona);
 		this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
 		this.project.setFechaUltimoCambio(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
 		this.project.setEstado(Constantes.ESTADO_ACTIVO);
@@ -139,6 +143,26 @@ public class ProjectBean implements Serializable {
 			
 			detail = "Se debe ingresar el nombre del proyecto";
 			valid = false;
+		}
+		
+		if(!project.getFechaInicio().isEmpty() && !project.getFechaFin().isEmpty()) {
+			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+			Date fechaInicio = null;
+			Date fechaFin = null;
+			
+			try {
+				fechaInicio = formato.parse(project.getFechaInicio());
+				fechaFin = formato.parse(project.getFechaFin());
+			} catch (ParseException ex) {
+				ex.printStackTrace();
+			}
+			
+			if(fechaInicio.compareTo(fechaFin) < 0) {
+				valid = true;
+			} else {
+				detail = "La fecha de inicio debe ser menor a la fecha de fin";				
+				valid = false;			
+			}
 		}
 
 		if (!valid) {
@@ -529,4 +553,3 @@ public class ProjectBean implements Serializable {
 	}
 	
 }
-
