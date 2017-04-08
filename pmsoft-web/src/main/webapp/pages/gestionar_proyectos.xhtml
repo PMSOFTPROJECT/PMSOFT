@@ -120,15 +120,28 @@
 							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}" rendered="#{!projectBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogInicioProject" value="#{projectBean.fechaInicioProject}"
-							label="Fecha de Inicio: " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}" rendered="#{!projectBean.visibleDelete}">
-						</ace:textEntry>
-
-						<ace:textEntry id="dialogFinProject" value="#{projectBean.fechaFinProject}"
-							label="Fecha de Finalización: " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}" rendered="#{!projectBean.visibleDelete}">
-						</ace:textEntry>
+						<ace:dateTimeEntry id="dialogInicioProject"
+                                   value="#{projectBean.fechaInicioProject}"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   required="true"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   rendered="#{!projectBean.visibleDelete}"
+                                   label="Fecha de inicio:"
+                                   labelPosition="left"
+                                   disabled="#{projectBean.visibleEdit}"/>
+						<ace:dateTimeEntry id="dialogFinProject"
+								   label="Fecha de finalización:"
+								   labelPosition="left"
+                                   value="#{projectBean.fechaFinProject}"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   required="true"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   rendered="#{!projectBean.visibleDelete}"
+                                   disabled="#{projectBean.visibleEdit}"/>
 
 						<ace:textEntry id="dialogStateProject" value="#{projectBean.estadoProject}"
 							label="Estado Proyecto: " labelPosition="left" required="true"

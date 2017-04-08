@@ -34,22 +34,22 @@ public class Project implements Serializable {
 	private double porcentaje;
 	
 	@Column(name = "proyecto_fechaInicio", nullable = false)
-	private String fechaInicio;
+	private Date fechaInicio;
 	
 	@Column(name = "proyecto_fechafin", nullable = false)
-	private String fechaFin;
+	private Date fechaFin;
 	
 	@Column(name = "proyecto_usuarioCreacion", nullable = false)
 	private String usuarioCreacion;
 	
 	@Column(name = "proyecto_fechaCreacion", nullable = false)
-	private String fechaCreacion;
+	private Date fechaCreacion;
 	
 	@Column(name = "proyecto_usuarioUltimoCambio", nullable = false)
 	private String usuarioUltimoCambio;
 	
 	@Column(name = "proyecto_fechaUltimoCambio", nullable = false)
-	private String fechaUltimoCambio;
+	private Date fechaUltimoCambio;
 	
 	@Column(name = "proyecto_estado", nullable = false)
 	private Integer estado;
@@ -110,15 +110,15 @@ public class Project implements Serializable {
 	/**
 	 * @return the fechaInicio
 	 */
-	public String getFechaInicio() {
+	public Date getFechaInicio() {
 		return fechaInicio;
 	}
 	
-	public String getFechaFin() {
+	public Date getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(String fechaFin) {
+	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
@@ -137,7 +137,7 @@ public class Project implements Serializable {
 	/**
 	 * @param fechaInicio the fechaInicio to set
 	 */
-	public void setFechaInicio(String fechaInicio) {
+	public void setFechaInicio(Date fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
@@ -158,14 +158,14 @@ public class Project implements Serializable {
 	/**
 	 * @return the fechaCreacion
 	 */
-	public String getFechaCreacion() {
+	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
 	/**
 	 * @param fechaCreacion the fechaCreacion to set
 	 */
-	public void setFechaCreacion(String fechaCreacion) {
+	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 
@@ -186,14 +186,14 @@ public class Project implements Serializable {
 	/**
 	 * @return the fechaUltimoCambio
 	 */
-	public String getFechaUltimoCambio() {
+	public Date getFechaUltimoCambio() {
 		return fechaUltimoCambio;
 	}
 
 	/**
 	 * @param fechaUltimoCambio the fechaUltimoCambio to set
 	 */
-	public void setFechaUltimoCambio(String fechaUltimoCambio) {
+	public void setFechaUltimoCambio(Date fechaUltimoCambio) {
 		this.fechaUltimoCambio = fechaUltimoCambio;
 	}
 

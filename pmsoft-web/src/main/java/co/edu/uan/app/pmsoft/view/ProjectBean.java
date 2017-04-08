@@ -1,10 +1,7 @@
 package co.edu.uan.app.pmsoft.view;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -46,6 +43,8 @@ public class ProjectBean implements Serializable {
 	private boolean visibleEdit;
 	private boolean visibleView;
 	private boolean visibleDelete;
+	private boolean popupDateFechaInicio = true;
+	private boolean popupDateFechaFin = true;
 
 
 	@Inject
@@ -78,35 +77,18 @@ public class ProjectBean implements Serializable {
 	public void addProject(ActionEvent event) {
 		logger.info("Entro a addProject(event:" + event + ")");
 
-		String day = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-		String month = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
-		String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-		String hour = String.valueOf(Calendar.getInstance().get(Calendar.HOUR));
-		String minute = String.valueOf(Calendar.getInstance().get(Calendar.MINUTE));
-		String second = String.valueOf(Calendar.getInstance().get(Calendar.SECOND));
-<<<<<<< HEAD
-		String zone = String.valueOf(Calendar.getInstance().get(Calendar.ZONE_OFFSET) / 3600000);
-		
-=======
-		String zona = String.valueOf(Calendar.getInstance().get(Calendar.ZONE_OFFSET) / 3600000);
-
->>>>>>> origin/master
 		this.project = new Project();
 		this.project.setVersion(1);
 		this.project.setNombre("");
 		this.project.setObjeto("");
-		this.project.setFechaInicio("");
-		this.project.setFechaFin("");
+		this.project.setFechaInicio(null);
+		this.project.setFechaFin(null);
 		this.project.setPersonaResponsable("");
 		this.project.setPorcentaje(0);
 		this.project.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
-<<<<<<< HEAD
-		this.project.setFechaCreacion(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + zone);
-=======
-		this.project.setFechaCreacion(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + zona);
->>>>>>> origin/master
+		this.project.setFechaCreacion(new Date());
 		this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
-		this.project.setFechaUltimoCambio(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+		this.project.setFechaUltimoCambio(new Date());
 		this.project.setEstado(Constantes.ESTADO_ACTIVO);
 		this.project.setEditable(true);
 
@@ -125,6 +107,8 @@ public class ProjectBean implements Serializable {
 
 		if (validateSaveAction()) {
 
+			
+			
 			try {
 				projectService.save(this.project);
 				this.getProjectAll();
@@ -155,26 +139,27 @@ public class ProjectBean implements Serializable {
 
 			detail = "Se debe ingresar el nombre del proyecto";
 			valid = false;
-		}
-
-		if(!project.getFechaInicio().isEmpty() && !project.getFechaFin().isEmpty()) {
-			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
-			Date fechaInicio = null;
-			Date fechaFin = null;
-
-			try {
-				fechaInicio = formato.parse(project.getFechaInicio());
-				fechaFin = formato.parse(project.getFechaFin());
-			} catch (ParseException ex) {
-				ex.printStackTrace();
-			}
-
-			if(fechaInicio.compareTo(fechaFin) < 0) {
-				valid = true;
-			} else {
-				detail = "La fecha de inicio debe ser menor a la fecha de fin";
-				valid = false;
-			}
+			
+		} else if (project.getFechaInicio() == null) {
+			detail = "Se debe ingresar una fecha de inicio";
+			valid = false;
+			
+		} else if (project.getFechaFin() == null) {
+			detail = "Se debe ingresar una fecha de fin";
+			valid = false;
+			
+		} else if (project.getFechaInicio().compareTo(project.getFechaFin()) > 0) {
+			detail = "La fecha fin no puede ser menor a la fecha inicio";
+			valid = false;
+			
+		} else if (StringUtils.isBlank(project.getObjeto())) {
+			detail = "Se debe ingresar el objeto del proyecto";
+			valid = false;
+			
+		} else if (StringUtils.isBlank(project.getPersonaResponsable())) {
+			detail = "Se debe ingresar la persona responsable del proyecto";
+			valid = false;
+			
 		}
 
 		if (!valid) {
@@ -198,15 +183,8 @@ public class ProjectBean implements Serializable {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
             if (tmpRowData instanceof Project) {
 
-        		String day = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + 1);
-        		String month = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
-        		String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-        		String hour = String.valueOf(Calendar.getInstance().get(Calendar.HOUR));
-        		String minute = String.valueOf(Calendar.getInstance().get(Calendar.MINUTE));
-        		String second = String.valueOf(Calendar.getInstance().get(Calendar.SECOND));
-
             	this.project = (Project) tmpRowData;
-            	this.project.setFechaUltimoCambio(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+            	this.project.setFechaUltimoCambio(new Date());
             	this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
         }
@@ -231,16 +209,8 @@ public class ProjectBean implements Serializable {
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
             if (tmpRowData instanceof Project) {
-
-            	String day = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + 1);
-        		String month = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
-        		String year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-        		String hour = String.valueOf(Calendar.getInstance().get(Calendar.HOUR));
-        		String minute = String.valueOf(Calendar.getInstance().get(Calendar.MINUTE));
-        		String second = String.valueOf(Calendar.getInstance().get(Calendar.SECOND));
-
             	this.project = (Project) tmpRowData;
-            	this.project.setFechaUltimoCambio(year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second);
+            	this.project.setFechaUltimoCambio(new Date());
             	this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
         }
@@ -414,14 +384,14 @@ public class ProjectBean implements Serializable {
 		}
 	}
 
-	public void setFechaInicioProject(String fecha) {
+	public void setFechaInicioProject(Date fecha) {
 		if(this.project != null){
 			this.project.setFechaInicio(fecha);
 		}
 	}
 
-	public String getFechaInicioProject() {
-		String fecha = null;
+	public Date getFechaInicioProject() {
+		Date fecha = null;
 		if(this.project != null){
 			fecha = this.project.getFechaInicio();
 		}
@@ -429,14 +399,14 @@ public class ProjectBean implements Serializable {
 		return fecha;
 	}
 
-	public void setFechaFinProject(String fecha) {
+	public void setFechaFinProject(Date fecha) {
 		if(this.project != null){
 			this.project.setFechaFin(fecha);
 		}
 	}
 
-	public String getFechaFinProject() {
-		String fecha = null;
+	public Date getFechaFinProject() {
+		Date fecha = null;
 		if(this.project != null){
 			fecha = this.project.getFechaFin();
 		}
@@ -474,29 +444,29 @@ public class ProjectBean implements Serializable {
 		return estado;
 	}
 
-	public void setFechaCreacionProject(String fechaCreacion) {
+	public void setFechaCreacionProject(Date fechaCreacion) {
 		if(this.project != null){
 			this.project.setFechaCreacion(fechaCreacion);
 		}
 	}
 
-	public String getFechaCreacionProject() {
-		String estado = null;
+	public Date getFechaCreacionProject() {
+		Date fechaCreacion = null;
 		if(this.project != null){
-			estado = this.project.getFechaCreacion();
+			fechaCreacion = this.project.getFechaCreacion();
 		}
 
-		return estado;
+		return fechaCreacion;
 	}
 
-	public void setFechaUltimoCambioProject(String fechaUltimoCambio) {
+	public void setFechaUltimoCambioProject(Date fechaUltimoCambio) {
 		if(this.project != null){
 			this.project.setFechaUltimoCambio(fechaUltimoCambio);
 		}
 	}
 
-	public String getFechaUltimoCambioProject() {
-		String fechaUltimoCambio = null;
+	public Date getFechaUltimoCambioProject() {
+		Date fechaUltimoCambio = null;
 		if(this.project != null){
 			fechaUltimoCambio = this.project.getFechaUltimoCambio();
 		}
@@ -590,4 +560,20 @@ public class ProjectBean implements Serializable {
 		this.visibleDelete = visibleDelete;
 	}
 
+	public boolean isPopupDateFechaInicio() {
+		return popupDateFechaInicio;
+	}
+
+	public void setPopupDateFechaInicio(boolean popupDateFechaInicio) {
+		this.popupDateFechaInicio = popupDateFechaInicio;
+	}
+
+	public boolean isPopupDateFechaFin() {
+		return popupDateFechaFin;
+	}
+
+	public void setPopupDateFechaFin(boolean popupDateFechaFin) {
+		this.popupDateFechaFin = popupDateFechaFin;
+	}
+	
 }
