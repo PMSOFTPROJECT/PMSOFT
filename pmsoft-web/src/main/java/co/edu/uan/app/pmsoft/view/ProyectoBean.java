@@ -3,13 +3,16 @@ package co.edu.uan.app.pmsoft.view;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.CustomScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -101,13 +104,12 @@ public class ProyectoBean implements Serializable {
 		this.visibleDelete = false;
 		logger.info(this.proyecto.getUsuarioUltimoCambio());
 		logger.info("Saliendo de addProject(rol:" + proyecto + ")");
-
 	}
 
-	public String saveAction() {
+	public String saveAction(ActionEvent event) {
 		logger.info("Entró a saveAction(ActionEvent event)");
-
-		if (validateSaveAction()) {
+        
+		if (validateSaveAction(event)) {
 			try {
 				proyectoService.save(this.proyecto);
 				this.getProjectAll();
@@ -123,20 +125,27 @@ public class ProyectoBean implements Serializable {
 		return PAGE_NAME;
 	}
 
-	private boolean validateSaveAction() {
+	private boolean validateSaveAction(ActionEvent event) {
 		logger.info("Entró a validateSaveAction()");
-
+		
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+        
+        // remove existing messages
+        Iterator<FacesMessage> i = facesContext.getMessages();
+        while (i.hasNext()) {
+            i.next();
+            i.remove();
+        }
+		
 		boolean valid = true;
 		String detail = "";
 
 		if (this.proyecto == null) {
-
 			detail = "No existe un objeto PROYECTO inicializado";
 			valid = false;
 
 		} else if (StringUtils.isBlank(this.proyecto.getNombre())) {
-
-			detail = "Se debe ingresar el nombre del proyecto";
+			detail = "Se debe ingresar el nombre del proyecto";	
 			valid = false;
 			
 		} else if (proyecto.getFechaInicio() == null) {
@@ -161,12 +170,14 @@ public class ProyectoBean implements Serializable {
 			
 		}
 
-		if (!valid) {
-
+		if (!valid) {			
 			FacesUtils.addMessageError("Guardar Proyecto", "Error al guardar el Proyecto", detail);
 			logger.error("Error validando el proyecto a guardar. "+detail);
+			
+			UIComponent component = event.getComponent();
+	        FacesMessage facesMessage = new FacesMessage((FacesMessage.Severity) FacesMessage.VALUES.get(2), detail, detail);
+	        facesContext.addMessage(component.getClientId(), facesMessage);
 		}
-
 		logger.info("Saliendo de validateSaveAction()");
 		return valid;
 	}
@@ -254,30 +265,28 @@ public class ProyectoBean implements Serializable {
 		this.visiblePopup = false;
 	}
 
-	public String deleteAction() {
+	public String deleteAction(ActionEvent event) {
 		logger.info("Entró a deleteAction(ActionEvent event)");
 
-		if (validateSaveAction()) {
+		try {
+			proyectoService.delete(this.proyecto);
+			this.getProjectAll();
+			this.closedPopup();
 
-			try {
-				proyectoService.delete(this.proyecto);
-				this.getProjectAll();
-				this.closedPopup();
-
-			} catch (Exception e) {
-				FacesUtils.addMessageError("Eliminar Proyecto", "Error al eliminar el Proyecto", e.getMessage());
-				logger.error("Error al eliminar proyecto. "+e.getMessage());
-			}
+		} catch (Exception e) {
+			FacesUtils.addMessageError("Eliminar Proyecto", "Error al eliminar el Proyecto", e.getMessage());
+			logger.error("Error al eliminar proyecto. "+e.getMessage());
 		}
+
 
 		logger.info("Saliendo de deleteAction()");
 		return PAGE_NAME;
 	}
 
-	public String viewAction() {
+	public String viewAction(ActionEvent event) {
 		logger.info("Entró a viewAction(ActionEvent event)");
 
-		if (validateSaveAction()) {
+		if (validateSaveAction(event)) {
 
 			try {
 				proyectoService.delete(this.proyecto);

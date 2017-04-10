@@ -6,10 +6,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import co.edu.uan.app.pmsoft.model.entity.Proyecto;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 
@@ -20,15 +16,11 @@ public class ProyectoService {
 	@PersistenceContext(unitName = "pmsoft-unit")
 	private EntityManager em;
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProyectoService.class);
-	
 	public List<Proyecto> getAll() {
 		CriteriaQuery<Proyecto> criteria = this.em.getCriteriaBuilder().createQuery(Proyecto.class);
 		
 		List<Proyecto> lista = this.em.createQuery(criteria.select(criteria.from(Proyecto.class))).getResultList();
-		
-		logger.info("Lista = " + lista);
-		
+				
 		return lista;
 	}
 
