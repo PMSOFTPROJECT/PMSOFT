@@ -14,69 +14,69 @@
 
 				<h:panelGroup>
 
-					<ace:dataTable id="dataTableProjects" value="#{projectBean.projectAll}"
+					<ace:dataTable id="dataTableProyectos" value="#{proyectoBean.projectAll}"
 						var="_item">
 
 						<ace:column id="id">
 							<f:facet name="header">
 								<h:outputText value="ID" />
 							</f:facet>
-							<h:outputText id="rolId" value="#{_item.id}" />
+							<h:outputText id="proyectoId" value="#{_item.id}" />
 						</ace:column>
 
 						<ace:column id="nombre">
 							<f:facet name="header">
 								<h:outputText value="Nombre" />
 							</f:facet>
-							<h:outputText id="projectNombre" value="#{_item.nombre}" />
+							<h:outputText id="nombreProyecto" value="#{_item.nombre}" />
 						</ace:column>
 
 						<ace:column id="fechaInicio">
 							<f:facet name="header">
 								<h:outputText value="Fecha de Inicio (dd-MM-yyyy)" />
 							</f:facet>
-							<h:outputText id="projectFechaInicio" value="#{_item.fechaInicio}" />
+							<h:outputText id="fechaInicioProyecto" value="#{_item.fechaInicio}" />
 						</ace:column>
 
 						<ace:column id="fechaFin">
 							<f:facet name="header">
 								<h:outputText value="Fecha de Finalización (dd-MM-yyyy)" />
 							</f:facet>
-							<h:outputText id="projectFechaFin" value="#{_item.fechaFin}" />
+							<h:outputText id="fechaFinProyecto" value="#{_item.fechaFin}" />
 						</ace:column>
 
-						<ace:column id="alcanceProject">
+						<ace:column id="alcance">
 							<f:facet name="header">
 								<h:outputText value="Alcance" />
 							</f:facet>
-							<h:outputText id="projectAlcance" value="#{_item.objeto}" />
+							<h:outputText id="alcanceProyecto" value="#{_item.objeto}" />
 						</ace:column>
 
 						<ace:column id="porcentaje">
 							<f:facet name="header">
 								<h:outputText value="Porcentaje" />
 							</f:facet>
-							<h:outputText id="projectPorcentaje" value="#{_item.porcentaje}" />
+							<h:outputText id="porcentajeProyecto" value="#{_item.porcentaje}" />
 						</ace:column>
 
 						<ace:column id="responsable">
 							<f:facet name="header">
 								<h:outputText value="Persona Responsable" />
 							</f:facet>
-							<h:outputText id="projectPersonaResponsable" value="#{_item.personaResponsable}" />
+							<h:outputText id="personaResponsableProyecto" value="#{_item.personaResponsable}" />
 						</ace:column>
 
 						<ace:column id="acciones">
 							<f:facet name="header">
 
 								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
-									actionListener="#{projectBean.addProject}" type="button">
+									actionListener="#{proyectoBean.agregarProyecto}" type="button">
 									<f:ajax execute="@this" render="@all" />
 								</h:commandButton>
 							</f:facet>
 
 							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
-								rendered="#{_item.editable}" actionListener="#{projectBean.editProject}"
+								rendered="#{_item.editable}" actionListener="#{proyectoBean.editarProyecto}"
 								type="button">
 								<f:ajax execute="@this" render="@all" />
 							</h:commandButton>
@@ -86,7 +86,7 @@
 								<h:outputText value="Eliminar" />
 							</f:facet>
 							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
-								rendered="true" actionListener="#{projectBean.deleteProject}"
+								rendered="true" actionListener="#{proyectoBean.eliminarProyecto}"
 								type="button">
 								<f:ajax execute="@this" render="@all" />
 							</h:commandButton>
@@ -96,7 +96,7 @@
 								<h:outputText value="Ver" />
 							</f:facet>
 							<h:commandButton id="idBtnVer" styleClass="btn_s_ver"
-								rendered="true" actionListener="#{projectBean.viewProject}"
+								rendered="true" actionListener="#{proyectoBean.verProyecto}"
 								type="button">
 								<f:ajax execute="@this" render="@all" />
 							</h:commandButton>
@@ -109,108 +109,109 @@
 		<h:form id="formDialog">
 			<h:panelGroup>
 				<!-- Sección del Popup para capturar los datos del Proyecto -->
-				<ace:dialog id="dialogRol" visible="#{projectBean.visiblePopup}"
-					closable="false" header="#{projectBean.headerDialog}" draggable="true"
+				<ace:dialog id="dialogProyecto" visible="#{proyectoBean.visiblePopup}"
+					closable="false" header="#{proyectoBean.headerDialog}" draggable="true"
 					modal="true" width="400">
-
+					
 					<h:panelGrid>
 
-						<ace:textEntry id="dialogProjectNombre" value="#{projectBean.nombreProject}"
+						<ace:textEntry id="dialogNombreProyecto" value="#{proyectoBean.nombreProyecto}"
 							label="Nombre: " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}" rendered="#{!projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}" rendered="#{!proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:dateTimeEntry id="dialogInicioProject"
-                                   value="#{projectBean.fechaInicioProject}"
+						<ace:dateTimeEntry id="dialogInicioProyecto"
+                                   value="#{proyectoBean.fechaInicioProyecto}"
                                    timeZone="American/Bogota"
                                    pattern="dd/MMM/yyyy"
                                    required="true"
                                    renderAsPopup="true"
                                    requiredIndicator="(*)"
-                                   rendered="#{!projectBean.visibleDelete}"
+                                   rendered="#{!proyectoBean.visibleDelete}"
                                    label="Fecha de inicio:"
                                    labelPosition="left"
-                                   disabled="#{projectBean.visibleEdit}"/>
-						<ace:dateTimeEntry id="dialogFinProject"
+                                   disabled="#{proyectoBean.visibleEdit}"/>
+                                   
+						<ace:dateTimeEntry id="dialogFinProyecto"
 								   label="Fecha de finalización:"
 								   labelPosition="left"
-                                   value="#{projectBean.fechaFinProject}"
+                                   value="#{proyectoBean.fechaFinProyecto}"
                                    timeZone="American/Bogota"
                                    pattern="dd/MMM/yyyy"
                                    required="true"
                                    renderAsPopup="true"
                                    requiredIndicator="(*)"
-                                   rendered="#{!projectBean.visibleDelete}"
-                                   disabled="#{projectBean.visibleEdit}"/>
+                                   rendered="#{!proyectoBean.visibleDelete}"
+                                   disabled="#{proyectoBean.visibleEdit}"/>
 
-						<ace:textEntry id="dialogStateProject" value="#{projectBean.estadoProject}"
+						<ace:textEntry id="dialogEstadoProyecto" value="#{proyectoBean.estadoProyecto}"
 							label="Estado Proyecto: " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}"
-							rendered="#{!projectBean.visibleView and !projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}"
+							rendered="#{!proyectoBean.visibleView and !proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogProjectObjeto" value="#{projectBean.objetoProject}"
+						<ace:textEntry id="dialogObjetoProyecto" value="#{proyectoBean.objetoProyecto}"
 							label="Alcance: " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}" rendered="#{!projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}" rendered="#{!proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogProjectPersonaResponsable" value="#{projectBean.personaResponsableProject}"
+						<ace:textEntry id="dialogPersonaResponsableProyecto" value="#{proyectoBean.personaResponsableProyecto}"
 							label="Persona Responsable: " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}" rendered="#{!projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}" rendered="#{!proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogProjectPorcentaje" value="#{projectBean.porcentajeProject}"
+						<ace:textEntry id="dialogPorcentajeProyecto" value="#{proyectoBean.porcentajeProyecto}"
 							label="Porcentaje de avance " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}"
-							rendered="#{!projectBean.visibleView and !projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}"
+							rendered="#{!proyectoBean.visibleView and !proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogProjectFechaCreacion" value="#{projectBean.fechaCreacionProject}"
+						<ace:textEntry id="dialogFechaCreacionProyecto" value="#{proyectoBean.fechaCreacionProyecto}"
 							label="Fecha de Creación " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}"
-							rendered="#{!projectBean.visibleView and !projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}"
+							rendered="#{!proyectoBean.visibleView and !proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogProjectUsuarioCreacion" value="#{projectBean.usuarioCreacionProject}"
+						<ace:textEntry id="dialogUsuarioCreacionProyecto" value="#{proyectoBean.usuarioCreacionProyecto}"
 							label="Usuario Creación " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}"
-							rendered="#{!projectBean.visibleView and !projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}"
+							rendered="#{!proyectoBean.visibleView and !proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogProjectFechaUltimoCambio" value="#{projectBean.fechaUltimoCambioProject}"
+						<ace:textEntry id="dialogFechaUltimoCambioProyecto" value="#{proyectoBean.fechaUltimoCambioProyecto}"
 							label="Fecha Último Cambio: " labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}"
-							rendered="#{!projectBean.visibleView and !projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}"
+							rendered="#{!proyectoBean.visibleView and !proyectoBean.visibleDelete}">
 						</ace:textEntry>
 
-						<ace:textEntry id="dialogProjectUsuarioUltimoCambio" value="#{projectBean.usuarioUltimoCambioProject}"
+						<ace:textEntry id="dialogUsuarioUltimoCambioProyecto" value="#{proyectoBean.usuarioUltimoCambioProyecto}"
 							label="Usuario Último Cambio" labelPosition="left" required="true"
-							requiredIndicator="(*)" readonly="#{projectBean.visibleEdit}"
-							rendered="#{!projectBean.visibleView and !projectBean.visibleDelete}">
+							requiredIndicator="(*)" readonly="#{proyectoBean.visibleEdit}"
+							rendered="#{!proyectoBean.visibleView and !proyectoBean.visibleDelete}">
 						</ace:textEntry>
 						
-						<h:outputText value = "¿Está seguro que desea eliminar el proyecto?" rendered="#{projectBean.visibleDelete}"/>
+						<h:outputText value = "¿Está seguro que desea eliminar el proyecto?" rendered="#{proyectoBean.visibleDelete}"/>
 						<br/>
-						<h:outputText value = "El proyecto pasará de un estado ACTIVO a un estado INACTIVO" rendered="#{projectBean.visibleDelete}" />
+						<h:outputText value = "El proyecto pasará de un estado ACTIVO a un estado INACTIVO" rendered="#{proyectoBean.visibleDelete}" />
 
-						<ace:pushButton id="dialogRolBtnGuardar"
-							action="#{projectBean.saveAction}" label="Guardar" rendered="#{!projectBean.visibleEdit and !projectBean.visibleDelete}">
+						<ace:pushButton id="dialogProyectoBtnGuardar"
+							action="#{proyectoBean.saveAction}" label="Guardar" rendered="#{!proyectoBean.visibleEdit and !proyectoBean.visibleDelete}">
 						</ace:pushButton>
 						
-						<ace:pushButton id="dialogRolBtnEliminar"
- 							action="#{projectBean.deleteAction}" label="Eliminar" rendered="#{projectBean.visibleDelete}">
+						<ace:pushButton id="dialogProyectoBtnEliminar"
+ 							action="#{proyectoBean.deleteAction}" label="Eliminar" rendered="#{proyectoBean.visibleDelete}">
  						</ace:pushButton>
  						
-						<ace:pushButton id="dialogRolBtnCancelar"
-							action="#{projectBean.cancelAction}" label="Cancelar" rendered="#{!projectBean.visibleEdit}">
+						<ace:pushButton id="dialogProyectoBtnCancelar"
+							action="#{proyectoBean.cancelAction}" label="Cancelar" rendered="#{!proyectoBean.visibleEdit}">
 						</ace:pushButton>
 
 						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
                             <h:commandButton image="../img/btn_s_cancelar.png"
                                              alt="Close" title="Close"
                                              style="height: 11px; width: 11px; border: 0;"
-                                             actionListener="#{projectBean.popupClose}"
-                                             rendered="#{!projectBean.visibleView}"/>
+                                             actionListener="#{proyectoBean.popupClose}"
+                                             rendered="#{!proyectoBean.visibleView}"/>
                         </h:panelGroup>
 
 					</h:panelGrid>

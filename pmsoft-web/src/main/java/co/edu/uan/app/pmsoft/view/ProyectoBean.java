@@ -17,25 +17,25 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import co.edu.uan.app.pmsoft.model.entity.Project;
+import co.edu.uan.app.pmsoft.model.entity.Proyecto;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
-import co.edu.uan.app.pmsoft.model.service.ProjectService;
+import co.edu.uan.app.pmsoft.model.service.ProyectoService;
 import co.edu.uan.app.pmsoft.util.FacesUtils;
 
-@ManagedBean(name = ProjectBean.BEAN_NAME)
+@ManagedBean(name = ProyectoBean.BEAN_NAME)
 @CustomScoped(value = "#{window}")
-public class ProjectBean implements Serializable {
+public class ProyectoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String BEAN_NAME = "projectBean";
+	public static final String BEAN_NAME = "proyectoBean";
 	public static final String PAGE_NAME = "gestionar_proyectos";
-	private static final Logger logger = LoggerFactory.getLogger(ProjectBean.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProyectoBean.class);
 
 	@EJB
-	ProjectService projectService;
+	ProyectoService proyectoService;
 
-	private Project project;
-	private List<Project> listProject;
+	private Proyecto proyecto;
+	private List<Proyecto> listaProyectos;
 	private List<SelectItem> listSelectItem;
 	private SelectItem selectItem;
 	private String headerDialog;
@@ -43,8 +43,8 @@ public class ProjectBean implements Serializable {
 	private boolean visibleEdit;
 	private boolean visibleView;
 	private boolean visibleDelete;
-	private boolean popupDateFechaInicio = true;
-	private boolean popupDateFechaFin = true;
+	private boolean popupDateFechaInicio;
+	private boolean popupDateFechaFin;
 
 
 	@Inject
@@ -52,13 +52,15 @@ public class ProjectBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		this.listProject = null;
-		this.project = null;
+		this.listaProyectos = null;
+		this.proyecto = null;
 		this.headerDialog = "";
 		this.visiblePopup = false;
 		this.visibleEdit = false;
 		this.visibleView = false;
 		this.visibleDelete = false;
+		this.popupDateFechaInicio = true;
+		this.popupDateFechaFin = true;
 	}
 
 	private void openPopup() {
@@ -69,36 +71,36 @@ public class ProjectBean implements Serializable {
 		this.visiblePopup = false;
 	}
 
-	public List<Project> getProjectAll() {
-		this.listProject = projectService.getAll();
-		return this.listProject;
+	public List<Proyecto> getProjectAll() {
+		this.listaProyectos = proyectoService.getAll();
+		return this.listaProyectos;
 	}
 
-	public void addProject(ActionEvent event) {
+	public void agregarProyecto(ActionEvent event) {
 		logger.info("Entro a addProject(event:" + event + ")");
 
-		this.project = new Project();
-		this.project.setVersion(1);
-		this.project.setNombre("");
-		this.project.setObjeto("");
-		this.project.setFechaInicio(null);
-		this.project.setFechaFin(null);
-		this.project.setPersonaResponsable("");
-		this.project.setPorcentaje(0);
-		this.project.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
-		this.project.setFechaCreacion(new Date());
-		this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
-		this.project.setFechaUltimoCambio(new Date());
-		this.project.setEstado(Constantes.ESTADO_ACTIVO);
-		this.project.setEditable(true);
+		this.proyecto = new Proyecto();
+		this.proyecto.setVersion(1);
+		this.proyecto.setNombre("");
+		this.proyecto.setObjeto("");
+		this.proyecto.setFechaInicio(null);
+		this.proyecto.setFechaFin(null);
+		this.proyecto.setPersonaResponsable("");
+		this.proyecto.setPorcentaje(0);
+		this.proyecto.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
+		this.proyecto.setFechaCreacion(new Date());
+		this.proyecto.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+		this.proyecto.setFechaUltimoCambio(new Date());
+		this.proyecto.setEstado(Constantes.ESTADO_ACTIVO);
+		this.proyecto.setEditable(true);
 
 		this.headerDialog = "Nuevo Proyecto";
 		this.openPopup();
 		this.visibleEdit = false;
 		this.visibleView = true;
 		this.visibleDelete = false;
-		logger.info(this.project.getUsuarioUltimoCambio());
-		logger.info("Saliendo de addProject(rol:" + project + ")");
+		logger.info(this.proyecto.getUsuarioUltimoCambio());
+		logger.info("Saliendo de addProject(rol:" + proyecto + ")");
 
 	}
 
@@ -106,11 +108,8 @@ public class ProjectBean implements Serializable {
 		logger.info("Entró a saveAction(ActionEvent event)");
 
 		if (validateSaveAction()) {
-
-			
-			
 			try {
-				projectService.save(this.project);
+				proyectoService.save(this.proyecto);
 				this.getProjectAll();
 				this.closedPopup();
 
@@ -130,33 +129,33 @@ public class ProjectBean implements Serializable {
 		boolean valid = true;
 		String detail = "";
 
-		if (this.project == null) {
+		if (this.proyecto == null) {
 
-			detail = "No existe un objeto PROJECT inicializado";
+			detail = "No existe un objeto PROYECTO inicializado";
 			valid = false;
 
-		} else if (StringUtils.isBlank(this.project.getNombre())) {
+		} else if (StringUtils.isBlank(this.proyecto.getNombre())) {
 
 			detail = "Se debe ingresar el nombre del proyecto";
 			valid = false;
 			
-		} else if (project.getFechaInicio() == null) {
+		} else if (proyecto.getFechaInicio() == null) {
 			detail = "Se debe ingresar una fecha de inicio";
 			valid = false;
 			
-		} else if (project.getFechaFin() == null) {
+		} else if (proyecto.getFechaFin() == null) {
 			detail = "Se debe ingresar una fecha de fin";
 			valid = false;
 			
-		} else if (project.getFechaInicio().compareTo(project.getFechaFin()) > 0) {
+		} else if (proyecto.getFechaInicio().compareTo(proyecto.getFechaFin()) > 0) {
 			detail = "La fecha fin no puede ser menor a la fecha inicio";
 			valid = false;
 			
-		} else if (StringUtils.isBlank(project.getObjeto())) {
+		} else if (StringUtils.isBlank(proyecto.getObjeto())) {
 			detail = "Se debe ingresar el objeto del proyecto";
 			valid = false;
 			
-		} else if (StringUtils.isBlank(project.getPersonaResponsable())) {
+		} else if (StringUtils.isBlank(proyecto.getPersonaResponsable())) {
 			detail = "Se debe ingresar la persona responsable del proyecto";
 			valid = false;
 			
@@ -172,7 +171,7 @@ public class ProjectBean implements Serializable {
 		return valid;
 	}
 
-	public void editProject(ActionEvent event) {
+	public void editarProyecto(ActionEvent event) {
 		logger.info("Entro a editProject(event:" + event + ")");
 
         UIComponent tmpComponent = event.getComponent();
@@ -181,12 +180,13 @@ public class ProjectBean implements Serializable {
         }
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            if (tmpRowData instanceof Project) {
-
-            	this.project = (Project) tmpRowData;
-            	this.project.setFechaUltimoCambio(new Date());
-            	this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+            
+            if (tmpRowData instanceof Proyecto) {
+            	this.proyecto = (Proyecto) tmpRowData;
+            	this.proyecto.setFechaUltimoCambio(new Date());
+            	this.proyecto.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
+            
         }
 
 		this.headerDialog = "Editar Proyecto";
@@ -195,11 +195,11 @@ public class ProjectBean implements Serializable {
 		this.visibleView = true;
 		this.visibleDelete = false;
 
-		logger.info("Saliendo de editProject(project:" + project + ")");
+		logger.info("Saliendo de editProject(project:" + proyecto + ")");
 
 	}
 
-	public void deleteProject(ActionEvent event) {
+	public void eliminarProyecto(ActionEvent event) {
 		logger.info("Entro a deleteProject(event:" + event + ")");
 
         UIComponent tmpComponent = event.getComponent();
@@ -208,10 +208,10 @@ public class ProjectBean implements Serializable {
         }
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            if (tmpRowData instanceof Project) {
-            	this.project = (Project) tmpRowData;
-            	this.project.setFechaUltimoCambio(new Date());
-            	this.project.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+            if (tmpRowData instanceof Proyecto) {
+            	this.proyecto = (Proyecto) tmpRowData;
+            	this.proyecto.setFechaUltimoCambio(new Date());
+            	this.proyecto.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
         }
         
@@ -222,11 +222,11 @@ public class ProjectBean implements Serializable {
         this.headerDialog = "Eliminar Proyecto";
         this.openPopup();
         
-		logger.info("Saliendo de deleteProject(project:" + project + ")");
+		logger.info("Saliendo de deleteProject(project:" + proyecto + ")");
 
 	}
 
-	public void viewProject(ActionEvent event) {
+	public void verProyecto(ActionEvent event) {
 		logger.info("Entro a viewProject(event:" + event + ")");
 
         UIComponent tmpComponent = event.getComponent();
@@ -235,8 +235,8 @@ public class ProjectBean implements Serializable {
         }
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            if (tmpRowData instanceof Project) {
-            	this.project = (Project) tmpRowData;
+            if (tmpRowData instanceof Proyecto) {
+            	this.proyecto = (Proyecto) tmpRowData;
             }
         }
 
@@ -246,7 +246,7 @@ public class ProjectBean implements Serializable {
 		this.headerDialog = "Información del Proyecto";
 		this.openPopup();
 
-		logger.info("Saliendo de viewProject(project:" + project + ")");
+		logger.info("Saliendo de viewProject(project:" + proyecto + ")");
 
 	}
 
@@ -260,7 +260,7 @@ public class ProjectBean implements Serializable {
 		if (validateSaveAction()) {
 
 			try {
-				projectService.delete(this.project);
+				proyectoService.delete(this.proyecto);
 				this.getProjectAll();
 				this.closedPopup();
 
@@ -280,7 +280,7 @@ public class ProjectBean implements Serializable {
 		if (validateSaveAction()) {
 
 			try {
-				projectService.delete(this.project);
+				proyectoService.delete(this.proyecto);
 				this.getProjectAll();
 				this.closedPopup();
 
@@ -298,8 +298,8 @@ public class ProjectBean implements Serializable {
 
 		this.listSelectItem = new ArrayList<SelectItem>();
 
-		if(this.listProject != null){
-			for (Project project : listProject) {
+		if(this.listaProyectos != null){
+			for (Proyecto project : listaProyectos) {
 				this.listSelectItem.add(new SelectItem(project.getId(), project.getNombre()));
 			}
 		}
@@ -324,17 +324,17 @@ public class ProjectBean implements Serializable {
 		this.headerDialog = headerDialog;
 	}
 
-	public Project getProject() {
+	public Proyecto getProyecto() {
 
-		logger.info("this.rol = " + this.project);
-		if (this.project != null)
-			logger.info("this.project.getNombre() = " + this.project.getNombre());
+		logger.info("this.rol = " + this.proyecto);
+		if (this.proyecto != null)
+			logger.info("this.project.getNombre() = " + this.proyecto.getNombre());
 
-		return this.project;
+		return this.proyecto;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setProyecto(Proyecto project) {
+		this.proyecto = project;
 	}
 
 	public boolean isVisiblePopup() {
@@ -345,16 +345,16 @@ public class ProjectBean implements Serializable {
 		this.visiblePopup = visiblePopup;
 	}
 
-	public void setNombreProject(String nombre){
-		if(this.project != null){
-			this.project.setNombre(nombre);
+	public void setNombreProyecto(String nombre){
+		if(this.proyecto != null){
+			this.proyecto.setNombre(nombre);
 		}
 	}
 
-	public String getNombreProject(){
+	public String getNombreProyecto(){
 		String nombre = "";
-		if(this.project != null){
-			nombre = this.project.getNombre();
+		if(this.proyecto != null){
+			nombre = this.proyecto.getNombre();
 		}
 
 		return nombre;
@@ -369,151 +369,151 @@ public class ProjectBean implements Serializable {
         this.visibleEdit = false;
     }
 
-    public String getObjetoProject(){
+    public String getObjetoProyecto(){
 		String objeto = "";
-		if(this.project != null){
-			objeto = this.project.getObjeto();
+		if(this.proyecto != null){
+			objeto = this.proyecto.getObjeto();
 		}
 
 		return objeto;
 	}
 
-	public void setObjetoProject(String objeto) {
-		if(this.project != null){
-			this.project.setObjeto(objeto);
+	public void setObjetoProyecto(String objeto) {
+		if(this.proyecto != null){
+			this.proyecto.setObjeto(objeto);
 		}
 	}
 
-	public void setFechaInicioProject(Date fecha) {
-		if(this.project != null){
-			this.project.setFechaInicio(fecha);
+	public void setFechaInicioProyecto(Date fecha) {
+		if(this.proyecto != null){
+			this.proyecto.setFechaInicio(fecha);
 		}
 	}
 
-	public Date getFechaInicioProject() {
+	public Date getFechaInicioProyecto() {
 		Date fecha = null;
-		if(this.project != null){
-			fecha = this.project.getFechaInicio();
+		if(this.proyecto != null){
+			fecha = this.proyecto.getFechaInicio();
 		}
 
 		return fecha;
 	}
 
-	public void setFechaFinProject(Date fecha) {
-		if(this.project != null){
-			this.project.setFechaFin(fecha);
+	public void setFechaFinProyecto(Date fecha) {
+		if(this.proyecto != null){
+			this.proyecto.setFechaFin(fecha);
 		}
 	}
 
-	public Date getFechaFinProject() {
+	public Date getFechaFinProyecto() {
 		Date fecha = null;
-		if(this.project != null){
-			fecha = this.project.getFechaFin();
+		if(this.proyecto != null){
+			fecha = this.proyecto.getFechaFin();
 		}
 
 		return fecha;
 	}
 
-	public void setEstadoProject(Integer estado) {
-		if(this.project != null){
-			this.project.setEstado(estado);
+	public void setEstadoProyecto(Integer estado) {
+		if(this.proyecto != null){
+			this.proyecto.setEstado(estado);
 		}
 	}
 
-	public Integer getEstadoProject() {
+	public Integer getEstadoProyecto() {
 		Integer estado = null;
-		if(this.project != null){
-			estado = this.project.getEstado();
+		if(this.proyecto != null){
+			estado = this.proyecto.getEstado();
 		}
 
 		return estado;
 	}
 
-	public void setPorcentajeProject(Double porcentaje) {
-		if(this.project != null){
-			this.project.setPorcentaje(porcentaje);
+	public void setPorcentajeProyecto(Double porcentaje) {
+		if(this.proyecto != null){
+			this.proyecto.setPorcentaje(porcentaje);
 		}
 	}
 
-	public double getPorcentajeProject() {
+	public double getPorcentajeProyecto() {
 		double estado = 0;
-		if(this.project != null){
-			estado = this.project.getPorcentaje();
+		if(this.proyecto != null){
+			estado = this.proyecto.getPorcentaje();
 		}
 
 		return estado;
 	}
 
-	public void setFechaCreacionProject(Date fechaCreacion) {
-		if(this.project != null){
-			this.project.setFechaCreacion(fechaCreacion);
+	public void setFechaCreacionProyecto(Date fechaCreacion) {
+		if(this.proyecto != null){
+			this.proyecto.setFechaCreacion(fechaCreacion);
 		}
 	}
 
-	public Date getFechaCreacionProject() {
+	public Date getFechaCreacionProyecto() {
 		Date fechaCreacion = null;
-		if(this.project != null){
-			fechaCreacion = this.project.getFechaCreacion();
+		if(this.proyecto != null){
+			fechaCreacion = this.proyecto.getFechaCreacion();
 		}
 
 		return fechaCreacion;
 	}
 
-	public void setFechaUltimoCambioProject(Date fechaUltimoCambio) {
-		if(this.project != null){
-			this.project.setFechaUltimoCambio(fechaUltimoCambio);
+	public void setFechaUltimoCambioProyecto(Date fechaUltimoCambio) {
+		if(this.proyecto != null){
+			this.proyecto.setFechaUltimoCambio(fechaUltimoCambio);
 		}
 	}
 
-	public Date getFechaUltimoCambioProject() {
+	public Date getFechaUltimoCambioProyecto() {
 		Date fechaUltimoCambio = null;
-		if(this.project != null){
-			fechaUltimoCambio = this.project.getFechaUltimoCambio();
+		if(this.proyecto != null){
+			fechaUltimoCambio = this.proyecto.getFechaUltimoCambio();
 		}
 
 		return fechaUltimoCambio;
 	}
 
-	public void setUsuarioCreacionProject(String usuarioCreacion) {
-		if(this.project != null){
-			this.project.setUsuarioCreacion(usuarioCreacion);
+	public void setUsuarioCreacionProyecto(String usuarioCreacion) {
+		if(this.proyecto != null){
+			this.proyecto.setUsuarioCreacion(usuarioCreacion);
 		}
 	}
 
-	public String getUsuarioCreacionProject() {
+	public String getUsuarioCreacionProyecto() {
 		String user = null;
-		if(this.project != null){
-			user = this.project.getUsuarioCreacion();
+		if(this.proyecto != null){
+			user = this.proyecto.getUsuarioCreacion();
 		}
 
 		return user;
 	}
 
-	public void setUsuarioUltimoCambioProject(String usuarioUltimoCambio) {
-		if(this.project != null){
-			this.project.setUsuarioUltimoCambio(usuarioUltimoCambio);
+	public void setUsuarioUltimoCambioProyecto(String usuarioUltimoCambio) {
+		if(this.proyecto != null){
+			this.proyecto.setUsuarioUltimoCambio(usuarioUltimoCambio);
 		}
 	}
 
-	public String getUsuarioUltimoCambioProject() {
+	public String getUsuarioUltimoCambioProyecto() {
 		String user = null;
-		if(this.project != null){
-			user = this.project.getUsuarioUltimoCambio();
+		if(this.proyecto != null){
+			user = this.proyecto.getUsuarioUltimoCambio();
 		}
 
 		return user;
 	}
 
-	public void setPersonaResponsableProject(String persona) {
-		if(this.project != null){
-			this.project.setPersonaResponsable(persona);
+	public void setPersonaResponsableProyecto(String persona) {
+		if(this.proyecto != null){
+			this.proyecto.setPersonaResponsable(persona);
 		}
 	}
 
-	public String getPersonaResponsableProject() {
+	public String getPersonaResponsableProyecto() {
 		String fecha = null;
-		if(this.project != null){
-			fecha = this.project.getPersonaResponsable();
+		if(this.proyecto != null){
+			fecha = this.proyecto.getPersonaResponsable();
 		}
 
 		return fecha;

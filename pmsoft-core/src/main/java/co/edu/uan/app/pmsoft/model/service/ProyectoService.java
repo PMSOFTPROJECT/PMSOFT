@@ -10,30 +10,30 @@ import javax.persistence.criteria.CriteriaQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import co.edu.uan.app.pmsoft.model.entity.Project;
+import co.edu.uan.app.pmsoft.model.entity.Proyecto;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 
 @Remote
 @Stateless
-public class ProjectService {
+public class ProyectoService {
 	
 	@PersistenceContext(unitName = "pmsoft-unit")
 	private EntityManager em;
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProyectoService.class);
 	
-	public List<Project> getAll() {
-		CriteriaQuery<Project> criteria = this.em.getCriteriaBuilder().createQuery(Project.class);
+	public List<Proyecto> getAll() {
+		CriteriaQuery<Proyecto> criteria = this.em.getCriteriaBuilder().createQuery(Proyecto.class);
 		
-		List<Project> lista = this.em.createQuery(criteria.select(criteria.from(Project.class))).getResultList();
+		List<Proyecto> lista = this.em.createQuery(criteria.select(criteria.from(Proyecto.class))).getResultList();
 		
 		logger.info("Lista = " + lista);
 		
 		return lista;
 	}
 
-	public Project getById(long id) throws Exception {
-		Project project = this.em.find(Project.class, id);
+	public Proyecto getById(long id) throws Exception {
+		Proyecto project = this.em.find(Proyecto.class, id);
 		
 		if (project == null) {
 			throw new Exception("No hay objeto con ese id");
@@ -42,8 +42,8 @@ public class ProjectService {
 		return project;
 	}
 	
-	public Project save(Project project) {
-		Project newProject = null;
+	public Proyecto save(Proyecto project) {
+		Proyecto newProject = null;
 		
 		if (project == null) {
 			throw new IllegalArgumentException("No hay objeto proyecto para guardar");
@@ -55,8 +55,8 @@ public class ProjectService {
 		
 	}
 	
-	public Project delete(Project project) {
-		Project delProject = null;
+	public Proyecto delete(Proyecto project) {
+		Proyecto delProject = null;
 		
 		if (project == null) {
 			throw new IllegalArgumentException("No hay objeto proyecto para eliminar");

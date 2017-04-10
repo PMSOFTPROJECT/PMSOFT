@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 @Entity
-public class Project implements Serializable {
+public class Proyecto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
