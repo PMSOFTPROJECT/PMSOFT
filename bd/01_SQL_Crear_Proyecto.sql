@@ -1,8 +1,8 @@
-﻿-- Table: public.project
+﻿-- Table: public.proyecto
 
--- DROP TABLE public.project;
+-- DROP TABLE public.proyecto;
 
-CREATE TABLE public.project
+CREATE TABLE public.proyecto
 (
   proyecto_id bigint NOT NULL,
   proyecto_editable boolean NOT NULL,
@@ -18,10 +18,10 @@ CREATE TABLE public.project
   proyecto_fechainicio timestamp with time zone,
   proyecto_fechaultimocambio timestamp with time zone,
   proyecto_fechafin timestamp with time zone,
-  CONSTRAINT project_pkey PRIMARY KEY (proyecto_id)
+  CONSTRAINT proyecto_pkey PRIMARY KEY (proyecto_id)
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.project
+ALTER TABLE public.proyecto
   OWNER TO postgres;
