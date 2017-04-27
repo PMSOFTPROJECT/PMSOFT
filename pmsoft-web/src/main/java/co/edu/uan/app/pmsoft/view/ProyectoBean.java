@@ -210,33 +210,6 @@ public class ProyectoBean implements Serializable {
 
 	}
 
-	public void eliminarProyecto(ActionEvent event) {
-		logger.info("Entro a deleteProject(event:" + event + ")");
-
-        UIComponent tmpComponent = event.getComponent();
-        while (null != tmpComponent && !(tmpComponent instanceof UIData)) {
-            tmpComponent = tmpComponent.getParent();
-        }
-        if (tmpComponent != null && (tmpComponent instanceof UIData)) {
-            Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            if (tmpRowData instanceof Proyecto) {
-            	this.proyecto = (Proyecto) tmpRowData;
-            	this.proyecto.setFechaUltimoCambio(new Date());
-            	this.proyecto.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
-            }
-        }
-        
-        
-        this.visibleEdit = false;
-        this.visibleView = true;
-        this.visibleDelete = true;
-        this.headerDialog = "Eliminar Proyecto";
-        this.openPopup();
-        
-		logger.info("Saliendo de deleteProject(project:" + proyecto + ")");
-
-	}
-
 	public void verProyecto(ActionEvent event) {
 		logger.info("Entro a viewProject(event:" + event + ")");
 
@@ -264,6 +237,28 @@ public class ProyectoBean implements Serializable {
 	public void popupClose() {
 		this.visiblePopup = false;
 	}
+	
+	public void eliminarProyecto(ActionEvent event) {
+		logger.info("Entro a deleteProject(event:" + event + ")");
+
+        UIComponent tmpComponent = event.getComponent();
+        while (null != tmpComponent && !(tmpComponent instanceof UIData)) {
+            tmpComponent = tmpComponent.getParent();
+        }
+        if (tmpComponent != null && (tmpComponent instanceof UIData)) {
+            Object tmpRowData = ((UIData) tmpComponent).getRowData();
+            if (tmpRowData instanceof Proyecto) {
+            	this.proyecto = (Proyecto) tmpRowData;
+            	this.proyecto.setFechaUltimoCambio(new Date());
+            	this.proyecto.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+            }
+        }
+        
+        this.closedPopup();
+        
+		logger.info("Saliendo de deleteProject(project:" + proyecto + ")");
+
+	}
 
 	public String deleteAction(ActionEvent event) {
 		logger.info("Entró a deleteAction(ActionEvent event)");
@@ -277,7 +272,6 @@ public class ProyectoBean implements Serializable {
 			FacesUtils.addMessageError("Eliminar Proyecto", "Error al eliminar el Proyecto", e.getMessage());
 			logger.error("Error al eliminar proyecto. "+e.getMessage());
 		}
-
 
 		logger.info("Saliendo de deleteAction()");
 		return PAGE_NAME;
@@ -302,6 +296,7 @@ public class ProyectoBean implements Serializable {
 		logger.info("Saliendo de viewAction()");
 		return PAGE_NAME;
 	}
+	
 
 	public List<SelectItem> getListSelectItem(){
 

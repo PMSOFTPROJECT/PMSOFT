@@ -29,9 +29,15 @@
 				<from-action>gestionar_proyectos</from-action>
 				<to-view-id>/faces/pages/gestionar_proyectos.xhtml</to-view-id>
 			</navigation-case>
+			<navigation-case>
+				<from-action>gestionar_versiones</from-action>
+				<to-view-id>/faces/pages/gestionar_versiones.xhtml</to-view-id>
+			</navigation-case>	
+			<navigation-case>
+				<from-action>gestionar_tipoRecurso</from-action>
+				<to-view-id>/faces/pages/gestionar_tipoRecurso.xhtml</to-view-id>
+			</navigation-case>			
 		</navigation-rule>
-
-
 
 	</application>
 

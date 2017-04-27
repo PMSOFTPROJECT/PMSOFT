@@ -1,0 +1,151 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+	
+		<h:form id="form1" styleClass="contentFeature">
+		
+			<ace:panel header="Gestionar Tipo de Recursos">
+			
+				<h:panelGroup>
+				
+					<ace:dataTable id="dataTableTipoRecursos" value="#{tipoRecursoBean.tipoRecursoAll}" var="_item">
+					
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="tipoRecursoId" value="#{_item.id}" />
+						</ace:column>
+						
+						<ace:column id="nombre">
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText id="tipoRecursoNombre" value="#{_item.nombre}" />
+						</ace:column>
+						
+						<ace:column id="estado">
+							<f:facet name="header">
+								<h:outputText value="Estado" />
+							</f:facet>
+							<h:outputText id="tipoRecursoEstado" value="#{_item.estado}" />
+						</ace:column>
+						
+						<ace:column id="usuarioCreacion">
+							<f:facet name="header">
+								<h:outputText value="Usuario creación" />
+							</f:facet>
+							<h:outputText id="tipoRecursoUsuarioCreacion" value="#{_item.usuarioCreacion}" />
+						</ace:column>
+						
+						<ace:column id="usuarioUltimaModificacion">
+							<f:facet name="header">
+								<h:outputText value="Usuario último cambio" />
+							</f:facet>
+							<h:outputText id="tipoRecursoUsuarioUltimaModificacion" value="#{_item.usuarioUltimoCambio}" />
+						</ace:column>
+						
+						<ace:column id="usuarioFechaCreacion">
+							<f:facet name="header">
+								<h:outputText value="Fecha creación" />
+							</f:facet>
+							<h:outputText id="tipoRecursoFechaCreacion" value="#{_item.fechaCreacion}" />
+						</ace:column>
+						
+						<ace:column id="usuarioFechaUltimoCambio">
+							<f:facet name="header">
+								<h:outputText value="Fecha último cambio" />
+							</f:facet>
+							<h:outputText id="tipoRecursoFechaUltimoCambio" value="#{_item.fechaUltimoCambio}" />
+						</ace:column>
+						
+						<ace:column id="acciones">
+							<f:facet name="header">
+
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add" type="button"
+									actionListener="#{tipoRecursoBean.agregarTipoRecurso}">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar" type="button" 
+								rendered="#{_item.editable}" onclick="ice.ace.instance('#{confirmEditarTipoRecurso.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirmEditarTipoRecurso" binding="#{confirmEditarTipoRecurso}"
+                                    message="¿Está seguro que desea editar la información del Tipo Recurso?"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="siEditarTipo" value="Si" onclick="ice.ace.instance('#{confirmEditarTipoRecurso.clientId}').hide();" actionListener="#{tipoRecursoBean.editarTipoRecurso}">
+				                    		<f:ajax execute="@this" render="@all" />
+					                    </h:commandButton>
+					                    <h:commandButton id="noEditarTipo" value="No" onclick="ice.ace.instance('#{confirmEditarTipoRecurso.clientId}').hide();" actionListener="#{tipoRecursoBean.cancelAction}">
+					                    	<f:ajax execute="@this" render="@all" />
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>
+						
+					</ace:dataTable>
+				
+				</h:panelGroup>
+				
+			</ace:panel>
+			
+		</h:form>
+		
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos de la Version -->
+				<ace:dialog id="dialogProyecto" visible="#{tipoRecursoBean.visiblePopup}"
+					closable="false" header="#{tipoRecursoBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+					<h:panelGrid>
+					
+						<ace:textEntry id="dialogNombreTipoRecurso" value="#{tipoRecursoBean.nombreTipoRecurso}"
+							label="Nombre: " labelPosition="left" requiredIndicator="(*)" readonly="#{versionBean.editar}">
+						</ace:textEntry>
+						
+						<ace:pushButton id="dialogTipoRecursoBtnGuardar"
+							actionListener="#{tipoRecursoBean.saveAction}" label="Guardar" rendered="#{!versionBean.ver}">
+						</ace:pushButton>
+	 						 						
+						<ace:pushButton id="dialogTipoRecursoBtnCancelar"
+							actionListener="#{tipoRecursoBean.cancelAction}" label="Cancelar" rendered="#{!versionBean.ver}">
+						</ace:pushButton>
+					
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+			
+			<ace:notificationPanel id="notificationPanel"
+                                   visible="#{tipoRecursoBean.visibleNotificacion}"
+                                   position="top"
+                                   effect="slide"
+                                   effectSpeed="slow"   >
+                    <ace:ajax event="close" execute="@this" render="@form" listener="#{tipoRecursoBean.closeListener}"/>
+                <f:facet name="close">
+                    <div class="ui-icon ui-icon-closethick"></div>
+                </f:facet>  
+                
+                <h:panelGrid columns="1" cellspacing="20">
+                   <h:outputText id="txt"
+                                          value="#{tipoRecursoBean.descripcionNotificacion}"
+                                          style="text-align: left; display: block;"/>
+                </h:panelGrid>
+            </ace:notificationPanel>
+			
+		</h:form>	
+	</ui:define>
+
+</ui:composition>

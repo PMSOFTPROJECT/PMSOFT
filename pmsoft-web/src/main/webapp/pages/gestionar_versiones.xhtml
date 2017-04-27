@@ -1,0 +1,252 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+	
+		<h:form id="form1" styleClass="contentFeature">
+		
+			<ace:panel header="Gestionar Versiones">
+			
+				<h:panelGroup>
+					
+					<ace:dataTable id="dataTableVersiones" value="#{versionBean.versionAll}" var="_item">
+					
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="versionId" value="#{_item.id}" />
+						</ace:column>
+						
+						<ace:column id="nombre">
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText id="nombreId" value="#{_item.nombre}" />
+						</ace:column>
+					
+						<ace:column id="fechaInicio">
+							<f:facet name="header">
+								<h:outputText value="Fecha de Inicio" />
+							</f:facet>
+							<h:outputText id="versionFechaInicio" value="#{_item.fechaInicio}" />
+						</ace:column>
+						
+						<ace:column id="fechaFin">
+							<f:facet name="header">
+								<h:outputText value="Fecha de Finalización" />
+							</f:facet>
+							<h:outputText id="versionFechaFin" value="#{_item.fechaFin}" />
+						</ace:column>
+						
+						<ace:column id="comentario">
+							<f:facet name="header">
+								<h:outputText value="Comentario" />
+							</f:facet>
+							<h:outputText id="versionComentario" value="#{_item.comentario}" />
+						</ace:column>
+						
+						<ace:column id="acciones">
+							<f:facet name="header">
+
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add" type="button"
+									actionListener="#{versionBean.agregarVersion}">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" type="button"
+								onclick="ice.ace.instance('#{confirmEditar.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirmEditar" binding="#{confirmEditar}"
+                                    message="¿Está seguro que desea editar la información de la versión?"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="siEditar" value="Si" onclick="ice.ace.instance('#{confirmEditar.clientId}').hide();" actionListener="#{versionBean.editarVersion}">
+				                    		<f:ajax execute="@this" render="@all" />
+					                    </h:commandButton>
+					                    <h:commandButton id="noEditar" value="No" onclick="ice.ace.instance('#{confirmEditar.clientId}').hide();" actionListener="#{versionBean.closeConfirmDialog}">
+					                    	<f:ajax execute="@this" render="@all" />
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>				
+						
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver" 
+								actionListener="#{versionBean.verVersion}">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>							
+						</ace:column>
+						
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								rendered="true"
+								type="button"
+								actionListener="#{versionBean.eliminarVersion}"
+								onclick="ice.ace.instance('#{confirmEliminar.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirmEliminar" binding="#{confirmEliminar}"
+                                    message="¿Está seguro que desea eliminar la versión?"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="siEliminar" value="Si" onclick="ice.ace.instance('#{confirmEliminar.clientId}').hide();" actionListener="#{versionBean.deleteAction}">
+					                    </h:commandButton>
+					                    <h:commandButton id="noEliminar" value="No" onclick="ice.ace.instance('#{confirmEliminar.clientId}').hide();" actionListener="#{versionBean.closeConfirmDialog}">
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>
+											
+					</ace:dataTable>
+				</h:panelGroup>			
+			</ace:panel>
+		</h:form>
+		
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos de la Version -->
+				<ace:dialog id="dialogProyecto" visible="#{versionBean.visiblePopup}"
+					closable="false" header="#{versionBean.headerDialog}" draggable="true"
+					modal="true" width="400" height="300">
+					<h:panelGrid>
+					
+						<ace:textEntry id="dialogNombreVersion" value="#{versionBean.nombreVersion}"
+							label="Nombre: " labelPosition="left" requiredIndicator="(*)" readonly="#{versionBean.editar}">
+						</ace:textEntry>
+						
+						<ace:dateTimeEntry id="dialogInicioVersion"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   label="Fecha de inicio:"
+                                   labelPosition="left"
+                                   value="#{versionBean.fechaInicioVersion}"
+                                   disabled="#{versionBean.ver}"/>
+                        
+                        <ace:dateTimeEntry id="dialogFinVersion"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   label="Fecha de finalización:"
+                                   labelPosition="left"
+                                   value="#{versionBean.fechaFinVersion}"
+                                   disabled="#{versionBean.ver}"/>
+                                   
+                        <ace:textAreaEntry id="comentarioVersion" value="#{versionBean.comentarioVersion}" label="Comentarios:" 
+                        	labelPosition="left" requiredIndicator=" (*)" indicatorPosition="labelRight" disabled="#{versionBean.ver}">
+	                        <ace:ajax render="@this comment1Output comment1Msg" event="blur"/>
+	                    </ace:textAreaEntry>
+	                    
+	                    <ace:comboBox id="combo"
+	                    			value="#{versionBean.estadoVersion}"
+									label="Estado: " 
+									labelPosition="left">
+						<f:selectItems value="#{versionBean.estados}"/>
+						</ace:comboBox>
+						
+						<ace:dateTimeEntry id="dialogCreacionVersion"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   label="Fecha de creación:"
+                                   labelPosition="left"
+                                   value="#{versionBean.fechaCreacionVersion}"
+                                   disabled="#{versionBean.ver}"
+                                   rendered="#{versionBean.ver}"/>
+                        
+                        <ace:dateTimeEntry id="dialogUltimoCambioVersion"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   label="Fecha última modificación:"
+                                   labelPosition="left"
+                                   value="#{versionBean.fechaUltimoCambioVersion}"
+                                   disabled="#{versionBean.ver}"
+                                   rendered="#{versionBean.ver}"/>
+	                    
+	                    <ace:textEntry id="usuarioCreacionVersion" value="#{versionBean.usuarioCreacionVersion}"
+							label="Usuario último cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{versionBean.ver}"
+							rendered="#{versionBean.ver}">
+						</ace:textEntry>
+	                    
+						<ace:textEntry id="usuarioUltimoCambioVersion" value="#{versionBean.usuarioUltimoCambioVersion}"
+							label="Usuario último cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{versionBean.ver}"
+							rendered="#{versionBean.ver}">
+						</ace:textEntry>
+					
+						<ace:pushButton id="dialogVersionBtnGuardar"
+							actionListener="#{versionBean.saveAction}" label="Guardar" rendered="#{!versionBean.ver}">
+						</ace:pushButton>
+	 						 						
+						<ace:pushButton id="dialogVersionBtnCancelar"
+							actionListener="#{versionBean.cancelAction}" label="Cancelar" rendered="#{!versionBean.ver}">
+						</ace:pushButton>
+						
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{versionBean.cancelAction}"
+                                             rendered="#{versionBean.ver}"/>
+                        </h:panelGroup>
+					
+					<ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""/>
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+			
+			<ace:notificationPanel id="notificationPanel"
+                                   visible="#{versionBean.visibleNotificacion}"
+                                   position="top"
+                                   effect="slide"
+                                   effectSpeed="slow"   >
+                    <ace:ajax event="close" execute="@this" render="@form" listener="#{versionBean.closeListener}"/>
+                <f:facet name="close">
+                    <div class="ui-icon ui-icon-closethick"></div>
+                </f:facet>  
+                
+                <h:panelGrid columns="1" cellspacing="20">
+                   <h:outputText id="txt"
+                                          value="#{versionBean.descripcionNotificacion}"
+                                          style="text-align: left; display: block;"/>
+                </h:panelGrid>
+            </ace:notificationPanel>
+			
+		</h:form>
+	
+	</ui:define>
+
+</ui:composition>
