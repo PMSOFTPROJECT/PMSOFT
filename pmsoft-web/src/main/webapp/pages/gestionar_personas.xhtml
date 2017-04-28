@@ -1,0 +1,243 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+
+		<h:form id="form1" styleClass="contentFeature">
+
+			<ace:panel header="Gestionar Personas">
+
+				<h:panelGroup>
+
+					<ace:dataTable id="dataTablePersonas" value="#{personaBean.personaAll}"
+						var="_item">
+
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="personaId" value="#{_item.id}" />
+						</ace:column>
+
+						<ace:column id="nombre">
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText id="nombrePersona" value="#{_item.nombre}" />
+						</ace:column>
+
+						<ace:column id="costoHora">
+							<f:facet name="header">
+								<h:outputText value="Costo de la hora" />
+							</f:facet>
+							<h:outputText id="costoHoraPersona" value="#{_item.costoHora}" />
+						</ace:column>
+
+						<ace:column id="cargo">
+							<f:facet name="header">
+								<h:outputText value="Cargo" />
+							</f:facet>
+							<h:outputText id="cargoPersona" value="#{_item.cargo}" />
+						</ace:column>
+						
+						<ace:column id="email">
+							<f:facet name="header">
+								<h:outputText value="Correo electrónico" />
+							</f:facet>
+							<h:outputText id="emailPersona" value="#{_item.email}" />
+						</ace:column>
+
+						<ace:column id="telefono">
+							<f:facet name="header">
+								<h:outputText value="Teléfono" />
+							</f:facet>
+							<h:outputText id="telefonoPersona" value="#{_item.telefono}" />
+						</ace:column>							
+						
+						<ace:column id="identificacion">
+							<f:facet name="header">
+								<h:outputText value="Identificación" />
+							</f:facet>
+							<h:outputText id="identificacionPersona" value="#{_item.identificacion}" />
+						</ace:column>	
+
+						<ace:column id="acciones">
+							<f:facet name="header">
+
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
+									actionListener="#{personaBean.agregarPersona}" type="button">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" actionListener="#{personaBean.editarPersona}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								rendered="true" actionListener="#{personaBean.eliminarPersona}"
+								type="button"
+								onclick="ice.ace.instance('#{confirmDialog.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver"
+								rendered="true" actionListener="#{personaBean.verPersona}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+					</ace:dataTable>
+				</h:panelGroup>
+			</ace:panel>
+			<ace:confirmationDialog id="confirmDialog" binding="#{confirmDialog}"
+                                    message="¿Está seguro que desea eliminar la persona? La persona pasará de un estado ACTIVO a un estado INACTIVO"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="2" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="yes" value="Si" onclick="ice.ace.instance('#{confirmDialog.clientId}').hide();" actionListener="#{personaBean.deleteAction}">
+					                    </h:commandButton>
+					                    <h:commandButton id="no" value="No" onclick="ice.ace.instance('#{confirmDialog.clientId}').hide();">
+					                    </h:commandButton>
+				                	</h:panelGrid>
+			</ace:confirmationDialog>
+		</h:form>
+
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos de la Persona -->
+				<ace:dialog id="dialogPersona" visible="#{personaBean.visiblePopup}"
+					closable="false" header="#{personaBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+					
+					<h:panelGrid>
+
+						<ace:textEntry id="dialogNombrePersona" value="#{personaBean.nombrePersona}"
+							label="Nombre: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogCostoHoraPersona" value="#{personaBean.costoHoraPersona}"
+							label="Costo por hora: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogCargoPersona" value="#{personaBean.cargoPersona}"
+							label="Cargo: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogTelefonoPersona" value="#{personaBean.telefonoPersona}"
+							label="Teléfono: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogDireccionPersona" value="#{personaBean.direccionPersona}"
+							label="Dirección: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogEmailPersona" value="#{personaBean.emailPersona}"
+							label="Email: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogTipoDocumentoPersona" value="#{personaBean.tipoDocumentoPersona}"
+							label="Tipo de documento: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogIdentificacionPersona" value="#{personaBean.identificacionPersona}"
+							label="Número de identificación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogNombreContactoEmergenciaPersona" value="#{personaBean.nombreContactoEmergenciaPersona}"
+							label="Nombre del contacto de emergencia: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogTelefonoContactoEmergenciaPersona" value="#{personaBean.telefonoContactoEmergenciaPersona}"
+							label="Teléfono del contacto de emergencia: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						</ace:textEntry>
+                                   
+						<ace:textEntry id="dialogEstadoPersona" value="#{personaBean.estadoPersona}"
+							label="Estado: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}"
+							rendered="#{!personaBean.visibleView and !personaBean.visibleDelete}">
+						</ace:textEntry>					
+
+						<ace:textEntry id="dialogFechaCreacionPersona" value="#{personaBean.fechaCreacionPersona}"
+							label="Fecha de Creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}"
+							rendered="#{!personaBean.visibleView and !personaBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioCreacionPersona" value="#{personaBean.usuarioCreacionPersona}"
+							label="Usuario Creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}"
+							rendered="#{!personaBean.visibleView and !personaBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaUltimoCambioPersona" value="#{personaBean.fechaUltimoCambioPersona}"
+							label="Fecha Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}"
+							rendered="#{!personaBean.visibleView and !personaBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioUltimoCambioPersona" value="#{personaBean.usuarioUltimoCambioPersona}"
+							label="Usuario Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}"
+							rendered="#{!personaBean.visibleView and !personaBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:pushButton id="dialogPersonaBtnGuardar"
+							actionListener="#{personaBean.saveAction}" label="Guardar" rendered="#{!personaBean.visibleEdit and !personaBean.visibleDelete}">
+						</ace:pushButton>
+						
+						<ace:pushButton id="dialogPersonaBtnEliminar"
+ 							actionListener="#{personaBean.deleteAction}" label="Eliminar" rendered="#{personaBean.visibleDelete}">
+ 						</ace:pushButton>
+ 						 						
+						<ace:pushButton id="dialogPersonaBtnCancelar"
+							actionListener="#{personaBean.cancelAction}" label="Cancelar" rendered="#{!personaBean.visibleEdit}">
+						</ace:pushButton>
+
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{personaBean.popupClose}"
+                                             rendered="#{!personaBean.visibleView}"/>
+                        </h:panelGroup>
+                        <ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""/>
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+		</h:form>		
+	</ui:define>
+
+</ui:composition>

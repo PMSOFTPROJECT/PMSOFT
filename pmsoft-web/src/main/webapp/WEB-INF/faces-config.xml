@@ -36,6 +36,10 @@
 			<navigation-case>
 				<from-action>gestionar_tipoRecurso</from-action>
 				<to-view-id>/faces/pages/gestionar_tipoRecurso.xhtml</to-view-id>
+			</navigation-case>
+			<navigation-case>
+				<from-action>gestionar_personas</from-action>
+				<to-view-id>/faces/pages/gestionar_personas.xhtml</to-view-id>
 			</navigation-case>			
 		</navigation-rule>
 
