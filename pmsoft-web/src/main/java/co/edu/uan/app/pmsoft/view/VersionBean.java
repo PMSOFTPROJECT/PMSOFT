@@ -163,10 +163,17 @@ public class VersionBean implements Serializable {
 		return valid;
 	}
 	
-	// TODO Falt a hacer la validación del nombre en la BD
 	public boolean validateNombreVersion() {
 		String nombre = this.version.getNombre();
-		return this.versionService.getByNombreVersion(nombre);
+		boolean result = false;
+		try {
+			 result = this.versionService.getByNombreVersion(nombre);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	public void editarVersion(ActionEvent event) {

@@ -1,16 +1,16 @@
 package co.edu.uan.app.pmsoft.model.service;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
-
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import co.edu.uan.app.pmsoft.model.entity.Version;
-import co.edu.uan.app.pmsoft.model.pojo.EstadosVersion;
 
 @Remote
 @Stateless
@@ -18,6 +18,8 @@ public class VersionService {
 	
 	@PersistenceContext(unitName = "pmsoft-unit")
 	private EntityManager em;
+	
+	private static final Logger logger = LoggerFactory.getLogger(VersionService.class);
 	
 	public List<Version> getAll() {
 		CriteriaQuery<Version> criteria = this.em.getCriteriaBuilder().createQuery(Version.class);
@@ -52,8 +54,21 @@ public class VersionService {
 		return delVersion;
 	}
 	
-	public boolean getByNombreVersion(String nombre_version) {
-		return false;
+	@SuppressWarnings("unchecked")
+	public boolean getByNombreVersion(String nombre_version) throws Exception {
+		boolean result = false;
+		
+		List<Version> lista = this.em.createNamedQuery("Version.findByNombre").setParameter("nombre", nombre_version).getResultList();
+				
+		if(lista.size() == 0){
+			
+			return result;
+			
+		}
+		
+		result = true;
+		
+		return result;
 	}
 	
 }
