@@ -137,6 +137,11 @@ public class TipoRecursoBean implements Serializable {
 		} else if (StringUtils.isBlank(this.tipoRecurso.getNombre())) {
 			detail = "Se debe ingresar el nombre del tipo de recurso";	
 			valid = false;
+
+		} else if (this.tipoRecurso.getNombre().length() > 50) {
+			detail = "El nombre del recurso no puede ser mayor a 50 caracteres";	
+			valid = false;
+			
 		}
 		
 		if (!valid) {			
