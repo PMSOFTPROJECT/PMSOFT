@@ -1,0 +1,140 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+
+		<h:form id="form1" styleClass="contentFeature">
+
+			<ace:panel header="Gestionar tipo de documento">
+
+				<h:panelGroup>
+
+					<ace:dataTable id="dataTableTipoDocumento" value="#{tipoDocumentoBean.tipoDocumentoAll}"
+						var="_item">
+
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="tipoDocumentoId" value="#{_item.id}" />
+						</ace:column>
+
+						<ace:column id="nombre">
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText id="nombreTipoDocumento" value="#{_item.nombre}" />
+						</ace:column>
+
+						<ace:column id="acciones">
+							<f:facet name="header">
+
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
+									actionListener="#{tipoDocumentoBean.agregarTipoDocumento}" type="button">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" actionListener="#{tipoDocumentoBean.editarTipoDocumento}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver"
+								rendered="true" actionListener="#{tipoDocumentoBean.verTipoDocumento}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+					</ace:dataTable>
+				</h:panelGroup>
+			</ace:panel>
+		</h:form>
+
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos del TipoDocumento -->
+				<ace:dialog id="dialogTipoDocumento" visible="#{tipoDocumentoBean.visiblePopup}"
+					closable="false" header="#{tipoDocumentoBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+					
+					<h:panelGrid>
+
+						<ace:textEntry id="dialogNombreTipoDocumento" value="#{tipoDocumentoBean.nombreTipoDocumento}"
+							label="Nombre: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{tipoDocumentoBean.visibleEdit}" rendered="#{!tipoDocumentoBean.visibleDelete}">
+						</ace:textEntry>
+
+
+						<ace:textEntry id="dialogEstadoTipoDocumento" value="#{tipoDocumentoBean.estadoTipoDocumento}"
+							label="Estado Tipo de Documento: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{tipoDocumentoBean.visibleEdit}"
+							rendered="#{!tipoDocumentoBean.visibleView and !tipoDocumentoBean.visibleDelete}">
+						</ace:textEntry>
+
+
+						<ace:textEntry id="dialogFechaCreacionTipoDocumento" value="#{tipoDocumentoBean.fechaCreacionTipoDocumento}"
+							label="Fecha de Creación " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{tipoDocumentoBean.visibleEdit}"
+							rendered="#{!tipoDocumentoBean.visibleView and !tipoDocumentoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioCreacionTipoDocumento" value="#{tipoDocumentoBean.usuarioCreacionTipoDocumento}"
+							label="Usuario Creación " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{tipoDocumentoBean.visibleEdit}"
+							rendered="#{!tipoDocumentoBean.visibleView and !tipoDocumentoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaUltimoCambioTipoDocumento" value="#{tipoDocumentoBean.fechaUltimoCambioTipoDocumento}"
+							label="Fecha Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{tipoDocumentoBean.visibleEdit}"
+							rendered="#{!tipoDocumentoBean.visibleView and !tipoDocumentoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioUltimoCambioTipoDocumento" value="#{tipoDocumentoBean.usuarioUltimoCambioTipoDocumento}"
+							label="Usuario Último Cambio" labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{tipoDocumentoBean.visibleEdit}"
+							rendered="#{!tipoDocumentoBean.visibleView and !tipoDocumentoBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:pushButton id="dialogTipoDocumentoBtnGuardar"
+							actionListener="#{tipoDocumentoBean.saveAction}" label="Guardar" rendered="#{!tipoDocumentoBean.visibleEdit and !tipoDocumentoBean.visibleDelete}">
+						</ace:pushButton>
+						
+						<ace:pushButton id="dialogTipoDocumentoBtnEliminar"
+ 							actionListener="#{tipoDocumentoBean.deleteAction}" label="Eliminar" rendered="#{tipoDocumentoBean.visibleDelete}">
+ 						</ace:pushButton>
+ 						 						
+						<ace:pushButton id="dialogTipoDocumentoBtnCancelar"
+							actionListener="#{tipoDocumentoBean.cancelAction}" label="Cancelar" rendered="#{!tipoDocumentoBean.visibleEdit}">
+						</ace:pushButton>
+
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{tipoDocumentoBean.popupClose}"
+                                             rendered="#{!tipoDocumentoBean.visibleView}"/>
+                        </h:panelGroup>
+                        <ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""/>
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+		</h:form>		
+	</ui:define>
+
+</ui:composition>
