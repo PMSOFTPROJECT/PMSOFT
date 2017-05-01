@@ -142,6 +142,10 @@ public class TipoRecursoBean implements Serializable {
 			detail = "El nombre del recurso no puede ser mayor a 50 caracteres";	
 			valid = false;
 			
+		} else if (validateNombreTipoRecurso()) {
+			detail = "El nombre de la versión ya existe";	
+			valid = false;
+			
 		}
 		
 		if (!valid) {			
@@ -157,6 +161,20 @@ public class TipoRecursoBean implements Serializable {
 		
 		return valid;
 	}
+	
+	public boolean validateNombreTipoRecurso() {
+		String nombre = this.tipoRecurso.getNombre();
+		boolean result = false;
+		try {
+			 result = this.tipoRecursoService.getByNombreTipoRecurso(nombre);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	
 	public String cancelAction() {
 		logger.info("Entró a cancelAction()");

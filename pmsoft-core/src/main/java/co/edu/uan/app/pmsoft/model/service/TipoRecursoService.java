@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import co.edu.uan.app.pmsoft.model.entity.TipoRecurso;
+import co.edu.uan.app.pmsoft.model.entity.Version;
 
 @Remote
 @Stateless
@@ -31,6 +32,23 @@ public class TipoRecursoService {
 		newTipoRecurso = this.em.merge(tipoRecurso);
 		
 		return newTipoRecurso;		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean getByNombreTipoRecurso(String nombre) throws Exception {
+		boolean result = false;
+		
+		List<TipoRecurso> lista = this.em.createNamedQuery("TipoRecurso.findByNombre").setParameter("nombre", nombre).getResultList();
+				
+		if(lista.size() == 0){
+			
+			return result;
+			
+		}
+		
+		result = true;
+		
+		return result;
 	}
 
 }
