@@ -44,6 +44,9 @@ public class VersionBean implements Serializable {
 	private boolean visiblePopup;
 	private boolean editar;
 	private boolean ver;
+	private boolean visibleCombo;
+	private int width;
+	private int height;
 	private boolean visibleNotificacion;
 		
 	@Inject
@@ -56,6 +59,9 @@ public class VersionBean implements Serializable {
 		this.visiblePopup = false;
 		this.editar = false;
 		this.ver = false;
+		this.visibleCombo = false;
+		this.width = 0;
+		this.height = 0;
 	}
 	
 	public List<Version> getVersionAll() {
@@ -79,7 +85,11 @@ public class VersionBean implements Serializable {
 		this.version.setFechaUltimoCambio(new Date());
 		this.version.setFechaCreacion(new Date());
 		this.headerDialog = "Nueva versión";
+		
 		this.editar = false;
+		this.visibleCombo = false;
+		this.width = 400;
+		this.height = 300;
 		this.openPopup();
 		
 	}
@@ -88,7 +98,7 @@ public class VersionBean implements Serializable {
 		logger.info("Entró a saveAction(ActionEvent event)");
         
 		if (validateSaveAction(event)) {
-			try {
+			try {				
 				versionService.save(this.version);
 				this.getVersionAll();
 				this.descripcionNotificacion = "Almacenado con éxito";
@@ -144,7 +154,7 @@ public class VersionBean implements Serializable {
 			detail = "Se debe ingresar el comentario de la versión";	
 			valid = false;
 			
-		} else if (validateNombreVersion()) {
+		} else if (validateNombreVersion() && !this.editar) {
 			detail = "El nombre de la versión ya existe";	
 			valid = false;
 		}
@@ -196,6 +206,9 @@ public class VersionBean implements Serializable {
         this.headerDialog = "Editar Version";
         this.editar = true;
         this.ver = false;
+        this.visibleCombo = true;
+        this.width = 400;
+		this.height = 300;
 		this.openPopup();
 
 		logger.info("Saliendo de editarVersion(project:" + version + ")");
@@ -221,6 +234,8 @@ public class VersionBean implements Serializable {
         this.headerDialog = "Información de la Version";
         this.editar = true;
         this.ver = true;
+        this.width = 400;
+        this.height = 410;
 		this.openPopup();
 	}
 	
@@ -270,11 +285,7 @@ public class VersionBean implements Serializable {
 	public void closeConfirmDialog(ActionEvent event) {
 		this.closedPopup();
 	}	
-	
-	public void closeListener(AjaxBehaviorEvent event) {
-		visibleNotificacion = false;
-	}
-	
+		
 	public String cancelAction() {
 		logger.info("Entró a cancelAction()");
 
@@ -474,21 +485,37 @@ public class VersionBean implements Serializable {
 	public void setDescripcionNotificacion(String descripcionNotificacion) {
 		this.descripcionNotificacion = descripcionNotificacion;
 	}
-	
-	public boolean isVisibleNotificacion() {
-		return visibleNotificacion;
-	}
-
-	public void setVisibleNotificacion(boolean visibleNotificacion) {
-		this.visibleNotificacion = visibleNotificacion;
-	}
-	
+		
 	public boolean isVer() {
 		return ver;
 	}
 
 	public void setVer(boolean ver) {
 		this.ver = ver;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public boolean isVisibleCombo() {
+		return visibleCombo;
+	}
+
+	public void setVisibleCombo(boolean visibleCombo) {
+		this.visibleCombo = visibleCombo;
 	}
 	
 	public List<SelectItem> getEstados() {
@@ -512,5 +539,17 @@ public class VersionBean implements Serializable {
     public void closeFAjax(AjaxBehaviorEvent event){
         this.visiblePopup = false;
     }
+
+	public boolean isVisibleNotificacion() {
+		return visibleNotificacion;
+	}
+
+	public void setVisibleNotificacion(boolean visibleNotificacion) {
+		this.visibleNotificacion = visibleNotificacion;
+	}
+	
+	public void closeListener(AjaxBehaviorEvent event) {
+		visibleNotificacion = false;
+	}
 
 }

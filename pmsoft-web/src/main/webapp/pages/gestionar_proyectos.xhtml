@@ -225,14 +225,15 @@
                                              actionListener="#{proyectoBean.popupClose}"
                                              rendered="#{!proyectoBean.visibleView}"/>
                         </h:panelGroup>
-                        <ace:growlMessages  id="allMsgsGrowl" autoHide="true"
-                                for="@inView"
-                               closeAll="true"
-                               maxVisibleMessages="0"
-                               position="top-right" header=""/>
 					</h:panelGrid>
 				</ace:dialog>
 			</h:panelGroup>
+			<ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""
+                               rendered="false"/>
 		</h:form>		
 	</ui:define>
 

@@ -39,6 +39,8 @@ public class TipoRecursoBean implements Serializable {
 	private String headerDialog;
 	private String descripcionNotificacion;
 	private boolean visiblePopup;
+	private boolean editar;
+	
 	private boolean visibleNotificacion;
 	
 	@Inject
@@ -48,6 +50,7 @@ public class TipoRecursoBean implements Serializable {
 		this.tipoRecurso = null;
 		this.listaTipoRecursos = null;
 		this.visiblePopup = false;
+		this.editar = false;
 	}
 	
 	public List<TipoRecurso> getTipoRecursoAll() {
@@ -68,12 +71,13 @@ public class TipoRecursoBean implements Serializable {
 		this.tipoRecurso.setFechaUltimoCambio(new Date());
 		this.tipoRecurso.setFechaCreacion(new Date());
 		this.headerDialog = "Nuevo Tipo de Recurso";
+		this.editar = true;
 		this.openPopup();
 	}
 	
 	public void editarTipoRecurso(ActionEvent event) {
 		logger.info("Entro a editarTipoRecurso(event:" + event + ")");
-
+		
         UIComponent tmpComponent = event.getComponent();
         while (null != tmpComponent && !(tmpComponent instanceof UIData)) {
             tmpComponent = tmpComponent.getParent();
@@ -89,6 +93,7 @@ public class TipoRecursoBean implements Serializable {
         }
         
         this.headerDialog = "Editar Tipo Recurso";
+        this.editar = false;
 		this.openPopup();
 
 		logger.info("Saliendo de editarVersion(project:" + tipoRecurso + ")");
@@ -96,21 +101,20 @@ public class TipoRecursoBean implements Serializable {
 	
 	public String saveAction(ActionEvent event) {
 		logger.info("Entró a saveAction(ActionEvent event)");
-        
+		        
 		if (validateSaveAction(event)) {
 			try {
 				this.tipoRecursoService.save(this.tipoRecurso);
 				this.getListaTipoRecursos();
-				this.closedPopup();
 				this.visibleNotificacion = true;
 				this.descripcionNotificacion = "Guardado con éxito";
-
+				this.closedPopup();					
+				
 			} catch (Exception e) {
 				FacesUtils.addMessageError("Guardar Tipo de recurso", "Error al guardar el tipo de recurso", e.getMessage());
 				logger.error("Error al guardar tipo recurso. "+e.getMessage());
 			}
-		}
-
+		}	
 		logger.info("Saliendo de saveAction()");
 		return PAGE_NAME;
 	}
@@ -142,7 +146,7 @@ public class TipoRecursoBean implements Serializable {
 			detail = "El nombre del recurso no puede ser mayor a 50 caracteres";	
 			valid = false;
 			
-		} else if (validateNombreTipoRecurso()) {
+		} else if (validateNombreTipoRecurso() && this.editar) {
 			detail = "El nombre de la versión ya existe";	
 			valid = false;
 			
@@ -183,10 +187,6 @@ public class TipoRecursoBean implements Serializable {
 
 		logger.info("Saliendo de cancelAction()");
 		return PAGE_NAME;
-	}
-	
-	public void closeListener(AjaxBehaviorEvent event) {
-		visibleNotificacion = false;
 	}
 	
 	private void openPopup() {
@@ -252,15 +252,7 @@ public class TipoRecursoBean implements Serializable {
 	public void setSessionBean(SessionBean sessionBean) {
 		this.sessionBean = sessionBean;
 	}
-	
-	public boolean isVisibleNotificacion() {
-		return visibleNotificacion;
-	}
-
-	public void setVisibleNotificacion(boolean visibleNotificacion) {
-		this.visibleNotificacion = visibleNotificacion;
-	}
-	
+		
 	public String getDescripcionNotificacion() {
 		return descripcionNotificacion;
 	}
@@ -276,5 +268,25 @@ public class TipoRecursoBean implements Serializable {
     public void closeFAjax(AjaxBehaviorEvent event){
         this.visiblePopup = false;
     }
+
+	public boolean isEditar() {
+		return editar;
+	}
+
+	public void setEditar(boolean editar) {
+		this.editar = editar;
+	}
+
+	public boolean isVisibleNotificacion() {
+		return visibleNotificacion;
+	}
+
+	public void setVisibleNotificacion(boolean visibleNotificacion) {
+		this.visibleNotificacion = visibleNotificacion;
+	}
+	
+	public void closeListener(AjaxBehaviorEvent event) {
+		visibleNotificacion = false;
+	}
 
 }

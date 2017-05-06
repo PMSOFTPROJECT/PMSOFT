@@ -111,8 +111,7 @@
 							actionListener="#{tipoDocumentoBean.saveAction}" label="Guardar" rendered="#{!tipoDocumentoBean.visibleEdit and !tipoDocumentoBean.visibleDelete}">
 						</ace:pushButton>
 						
-						<ace:pushButton id="dialogTipoDocumentoBtnEliminar"
- 							actionListener="#{tipoDocumentoBean.deleteAction}" label="Eliminar" rendered="#{tipoDocumentoBean.visibleDelete}">
+						<ace:pushButton id="dialogTipoDocumentoBtnEliminar" label="Eliminar" rendered="#{tipoDocumentoBean.visibleDelete}">
  						</ace:pushButton>
  						 						
 						<ace:pushButton id="dialogTipoDocumentoBtnCancelar"
@@ -126,11 +125,6 @@
                                              actionListener="#{tipoDocumentoBean.popupClose}"
                                              rendered="#{!tipoDocumentoBean.visibleView}"/>
                         </h:panelGroup>
-                        <ace:growlMessages  id="allMsgsGrowl" autoHide="true"
-                                for="@inView"
-                               closeAll="true"
-                               maxVisibleMessages="0"
-                               position="top-right" header=""/>
 					</h:panelGrid>
 				</ace:dialog>
 			</h:panelGroup>

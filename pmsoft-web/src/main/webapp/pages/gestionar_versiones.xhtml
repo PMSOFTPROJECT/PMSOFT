@@ -51,6 +51,13 @@
 							<h:outputText id="versionComentario" value="#{_item.comentario}" />
 						</ace:column>
 						
+						<ace:column id="estado">
+							<f:facet name="header">
+								<h:outputText value="Estado" />
+							</f:facet>
+							<h:outputText id="versionEstado" value="#{_item.estado}" />
+						</ace:column>
+						
 						<ace:column id="acciones">
 							<f:facet name="header">
 
@@ -130,7 +137,7 @@
 				<!-- Sección del Popup para capturar los datos de la Version -->
 				<ace:dialog id="dialogProyecto" visible="#{versionBean.visiblePopup}"
 					closable="false" header="#{versionBean.headerDialog}" draggable="true"
-					modal="true" width="400" height="300">
+					modal="true" width="#{versionBean.width}" height="#{versionBean.height}">
 					<h:panelGrid>
 					
 						<ace:textEntry id="dialogNombreVersion" value="#{versionBean.nombreVersion}"
@@ -162,10 +169,16 @@
 	                        <ace:ajax render="@this comment1Output comment1Msg" event="blur"/>
 	                    </ace:textAreaEntry>
 	                    
+	                    <ace:textEntry id="comboEstados" value="#{versionBean.estadoVersion}" label="Estado:" 
+                        	labelPosition="left" requiredIndicator=" (*)" indicatorPosition="labelRight" disabled="#{versionBean.ver}" rendered="#{versionBean.ver}">
+	                        <ace:ajax render="@this comment1Output comment1Msg" event="blur"/>
+	                    </ace:textEntry>
+	                    
 	                    <ace:comboBox id="combo"
 	                    			value="#{versionBean.estadoVersion}"
 									label="Estado: " 
-									labelPosition="left">
+									labelPosition="left"
+									rendered="#{!versionBean.ver}">
 						<f:selectItems value="#{versionBean.estados}"/>
 						</ace:comboBox>
 						
@@ -211,40 +224,32 @@
 							actionListener="#{versionBean.cancelAction}" label="Cancelar" rendered="#{!versionBean.ver}">
 						</ace:pushButton>
 						
-						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+						<h:panelGroup style="float:right;position:absolute;right:0;top:0;">
                             <h:commandButton image="../img/btn_s_cancelar.png"
                                              alt="Close" title="Close"
                                              style="height: 11px; width: 11px; border: 0;"
                                              actionListener="#{versionBean.cancelAction}"
                                              rendered="#{versionBean.ver}"/>
                         </h:panelGroup>
-					
-					<ace:growlMessages  id="allMsgsGrowl" autoHide="true"
-                                for="@inView"
-                               closeAll="true"
-                               maxVisibleMessages="0"
-                               position="top-right" header=""/>
-					</h:panelGrid>
+					</h:panelGrid>					
 				</ace:dialog>
 			</h:panelGroup>
-			
 			<ace:notificationPanel id="notificationPanel"
                                    visible="#{versionBean.visibleNotificacion}"
                                    position="top"
                                    effect="slide"
                                    effectSpeed="slow"   >
-                    <ace:ajax event="close" execute="@this" render="@form" listener="#{versionBean.closeListener}"/>
-                <f:facet name="close">
-                    <div class="ui-icon ui-icon-closethick"></div>
-                </f:facet>  
-                
-                <h:panelGrid columns="1" cellspacing="20">
-                   <h:outputText id="txt"
-                                          value="#{versionBean.descripcionNotificacion}"
-                                          style="text-align: left; display: block;"/>
-                </h:panelGrid>
-            </ace:notificationPanel>
-			
+			                    <ace:ajax event="close" execute="@this" render="@form" listener="#{versionBean.closeListener}"/>
+			                <f:facet name="close">
+			                    <div class="ui-icon ui-icon-closethick"></div>
+			                </f:facet>  
+			                
+			                <h:panelGrid columns="1" cellspacing="20">
+			                   <h:outputText id="txt"
+			                                          value="#{versionBean.descripcionNotificacion}"
+			                                          style="text-align: left; display: block;"/>
+			                </h:panelGrid>
+			            </ace:notificationPanel>
 		</h:form>
 	
 	</ui:define>
