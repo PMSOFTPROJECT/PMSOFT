@@ -44,6 +44,10 @@
 			<navigation-case>
 				<from-action>gestionar_tipo_documentos</from-action>
 				<to-view-id>/faces/pages/gestionar_tipo_documentos.xhtml</to-view-id>
+			</navigation-case>
+			<navigation-case>
+				<from-action>gestionar_recursos</from-action>
+				<to-view-id>/faces/pages/gestionar_recursos.xhtml</to-view-id>
 			</navigation-case>			
 		</navigation-rule>
 

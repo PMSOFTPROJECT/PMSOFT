@@ -154,6 +154,9 @@ public class VersionBean implements Serializable {
 			detail = "Se debe ingresar el comentario de la versión";	
 			valid = false;
 			
+		} else if (StringUtils.isBlank(this.version.getEstado())) {
+			detail = "Se debe ingresar el estado de la versión";	
+			valid = false;
 		}
 		
 		if (!valid) {			

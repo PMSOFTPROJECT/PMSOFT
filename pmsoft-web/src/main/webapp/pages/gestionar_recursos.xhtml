@@ -1,0 +1,124 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+	
+		<h:form id="form1" styleClass="contentFeature">
+		
+			<ace:panel header="Gestionar Versiones">
+			
+				<h:panelGroup>
+					
+					<ace:dataTable id="dataTableRecursos" value="#{recursoBean.recursoAll}" var="_item">
+					
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="versionId" value="#{_item.id}" />
+						</ace:column>
+						
+						<ace:column id="nombre">
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText id="nombreId" value="#{_item.nombre}" />
+						</ace:column>
+						<!-- 
+						<ace:column id="tipoRecurso">
+							<f:facet name="header">
+								<h:outputText value="Tipo de recurso" />
+							</f:facet>
+							<h:outputText id="tipoRecursoId" value="#{_item.tipoRecurso}" />
+						</ace:column>
+						 -->
+						<ace:column id="estado">
+							<f:facet name="header">
+								<h:outputText value="Estado" />
+							</f:facet>
+							<h:outputText id="estadoId" value="#{_item.estado}" />
+						</ace:column>
+						
+						<ace:column id="costo">
+							<f:facet name="header">
+								<h:outputText value="Costo" />
+							</f:facet>
+							<h:outputText id="costoId" value="#{_item.costo}" />
+						</ace:column>
+						
+						<ace:column id="acciones">
+							<f:facet name="header">
+
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add" type="button"
+									actionListener="#{recursoBean.agregarRecurso}">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>				
+						
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>											
+					</ace:dataTable>
+				</h:panelGroup>			
+			</ace:panel>
+		</h:form>
+		
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos del Proyecto -->
+				<ace:dialog id="dialogRecurso" visible="#{recursoBean.visiblePopup}"
+					closable="false" header="#{recursoBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+					
+					<h:panelGrid>
+
+						<ace:textEntry id="dialogNombreRecurso" value="#{recursoBean.nombreRecurso}"
+							label="Nombre: " labelPosition="left" required="false"
+							requiredIndicator="(*)">
+						</ace:textEntry>
+						<!-- 
+						<ace:textEntry id="dialogTipoRecurso" value="0"
+							label="Tipo Recurso: " labelPosition="left" required="false"
+							requiredIndicator="(*)">
+						</ace:textEntry>
+						 -->
+						<ace:textEntry id="dialogCostoRecurso" value="#{recursoBean.costoRecurso}"
+							label="Costo Recurso: " labelPosition="left" required="false"
+							requiredIndicator="(*)">
+						</ace:textEntry>
+						
+						<ace:pushButton id="dialogRecursoBtnGuardar"
+							actionListener="#{recursoBean.saveAction}" label="Guardar">
+						</ace:pushButton>
+						
+						<ace:pushButton id="dialogRecursoBtnCancelar"
+							actionListener="#{recursoBean.cancelAction}" label="Cancelar">
+						</ace:pushButton>
+					
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+		</h:form>
+		
+
+		
+	</ui:define>
+	
+</ui:composition>
