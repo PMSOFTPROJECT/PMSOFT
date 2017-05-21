@@ -33,22 +33,5 @@ public class TipoRecursoService {
 		
 		return newTipoRecurso;		
 	}
-	
-	@SuppressWarnings("unchecked")
-	public boolean getByNombreTipoRecurso(String nombre) throws Exception {
-		boolean result = false;
-		
-		List<TipoRecurso> lista = this.em.createNamedQuery("TipoRecurso.findByNombre").setParameter("nombre", nombre).getResultList();
-				
-		if(lista.size() == 0){
-			
-			return result;
-			
-		}
-		
-		result = true;
-		
-		return result;
-	}
 
 }

@@ -154,9 +154,6 @@ public class VersionBean implements Serializable {
 			detail = "Se debe ingresar el comentario de la versión";	
 			valid = false;
 			
-		} else if (validateNombreVersion() && !this.editar) {
-			detail = "El nombre de la versión ya existe";	
-			valid = false;
 		}
 		
 		if (!valid) {			
@@ -171,19 +168,6 @@ public class VersionBean implements Serializable {
 		logger.info("Saliendo de validateSaveAction()");
 		
 		return valid;
-	}
-	
-	public boolean validateNombreVersion() {
-		String nombre = this.version.getNombre();
-		boolean result = false;
-		try {
-			 result = this.versionService.getByNombreVersion(nombre);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return result;
 	}
 	
 	public void editarVersion(ActionEvent event) {

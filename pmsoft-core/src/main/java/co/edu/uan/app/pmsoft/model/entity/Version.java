@@ -11,9 +11,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries({
-	@NamedQuery(name = "Version.findByNombre", query = "SELECT p FROM Version p WHERE p.nombre = :nombre")
-})
+
 public class Version implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id

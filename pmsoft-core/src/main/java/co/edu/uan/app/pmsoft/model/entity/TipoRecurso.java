@@ -12,9 +12,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 
 @Entity
-@NamedQueries({
-	@NamedQuery(name = "TipoRecurso.findByNombre", query = "SELECT p FROM TipoRecurso p WHERE p.nombre = :nombre")
-})
 public class TipoRecurso implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

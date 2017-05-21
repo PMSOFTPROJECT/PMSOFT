@@ -54,21 +54,4 @@ public class VersionService {
 		return delVersion;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public boolean getByNombreVersion(String nombre_version) throws Exception {
-		boolean result = false;
-		
-		List<Version> lista = this.em.createNamedQuery("Version.findByNombre").setParameter("nombre", nombre_version).getResultList();
-				
-		if(lista.size() == 0){
-			
-			return result;
-			
-		}
-		
-		result = true;
-		
-		return result;
-	}
-	
 }
