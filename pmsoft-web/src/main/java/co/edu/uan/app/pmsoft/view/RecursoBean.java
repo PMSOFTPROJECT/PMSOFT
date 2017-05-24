@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.io.Serializable;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -20,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import co.edu.uan.app.pmsoft.model.entity.Recurso;
-import co.edu.uan.app.pmsoft.model.entity.TipoRecurso;
+import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 import co.edu.uan.app.pmsoft.model.service.RecursoService;
 import co.edu.uan.app.pmsoft.util.FacesUtils;
 
@@ -41,6 +40,7 @@ public class RecursoBean implements Serializable {
 	private List<SelectItem> listSelectItem;
 	private String headerDialog;
 	private boolean visiblePopup;
+	private boolean ver;
 	
 	@Inject
 	private SessionBean sessionBean;
@@ -50,6 +50,7 @@ public class RecursoBean implements Serializable {
 		this.recurso = null;
 		this.listaRecursos = null;
 		this.visiblePopup = false;
+		this.ver = false;
 	}
 	
 	public List<Recurso> getRecursoAll() {
@@ -64,14 +65,15 @@ public class RecursoBean implements Serializable {
 		this.recurso.setVersion(1);
 		this.recurso.setNombre("");
 		// TODO Falta agregar TipoRecurso
-		this.recurso.setEstado(1); // TODO Con qué estado se inicializa?
+		this.recurso.setEstado(Constantes.ESTADO_ACTIVO); // TODO Con qué estado se inicializa?
 		this.recurso.setCosto(0.0); // TODO Es double?
 		this.recurso.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
 		this.recurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
 		this.recurso.setFechaUltimoCambio(new Date());
 		this.recurso.setFechaCreacion(new Date());
 		this.recurso.setEditable(true);
-		this.headerDialog = "Nuevo recurso";	
+		this.headerDialog = "Nuevo recurso";
+		this.ver = false;
 		this.openPopup();
 	}
 	
@@ -117,7 +119,7 @@ public class RecursoBean implements Serializable {
 			detail = "Se debe ingresar el nombre del recurso";	
 			valid = false;
 			
-		} else if (false) { // TODO Validad el objeto tipo recurso
+		} else if (false) { // TODO Validar el objeto tipo recurso
 			detail = "Se debe ingresar el tipo del recurso";	
 			valid = false;
 			
@@ -154,6 +156,7 @@ public class RecursoBean implements Serializable {
             }
         }
         
+        this.ver = false;
         this.headerDialog = "Editar Recurso";
 		this.openPopup();
 
@@ -161,7 +164,46 @@ public class RecursoBean implements Serializable {
 	}
 	
 	public void eliminarRecurso(ActionEvent event) {
-		logger.info("Entro a eliminarRecurso(event:" + event + ")");
+		logger.info("Entro a deleteProject(event:" + event + ")");
+
+        UIComponent tmpComponent = event.getComponent();
+        while (null != tmpComponent && !(tmpComponent instanceof UIData)) {
+            tmpComponent = tmpComponent.getParent();
+        }
+        if (tmpComponent != null && (tmpComponent instanceof UIData)) {
+            Object tmpRowData = ((UIData) tmpComponent).getRowData();
+            if (tmpRowData instanceof Recurso) {
+            	this.recurso = (Recurso) tmpRowData;
+            	this.recurso.setFechaUltimoCambio(new Date());
+            	this.recurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+            	deleteAction();
+            }
+        }
+        
+		logger.info("Saliendo de deleteProject(project:" + recurso + ")");
+
+	}
+	
+	
+	public String deleteAction() {
+		logger.info("Entró a eliminarRecurso(ActionEvent event)");
+
+		try {
+			recursoService.delete(this.recurso);
+			this.getRecursoAll();
+			this.closedPopup();
+
+		} catch (Exception e) {
+			FacesUtils.addMessageError("Eliminar Recurso", "Error al eliminar el Recurso", e.getMessage());
+			logger.error("Error al eliminar recurso. "+e.getMessage());
+		}
+
+		logger.info("Saliendo de deleteAction()");
+		return PAGE_NAME;
+	}
+	
+	public void verVersion(ActionEvent event) {
+		logger.info("Entro a editarVersion(event:" + event + ")");
 
         UIComponent tmpComponent = event.getComponent();
         while (null != tmpComponent && !(tmpComponent instanceof UIData)) {
@@ -177,10 +219,9 @@ public class RecursoBean implements Serializable {
             }
         }
         
-        this.headerDialog = "Eliminar Recurso";
-        this.closedPopup();
-
-		logger.info("Saliendo de eliminarRecurso(project:" + recurso + ")");
+        this.ver = true;
+        this.headerDialog = "Información del Recurso";
+		this.openPopup();
 	}
 	
 	public String cancelAction() {
@@ -330,6 +371,14 @@ public class RecursoBean implements Serializable {
 		}
 
 		return usuario;
+	}
+
+	public boolean isVer() {
+		return ver;
+	}
+
+	public void setVer(boolean ver) {
+		this.ver = ver;
 	}
 	
 	

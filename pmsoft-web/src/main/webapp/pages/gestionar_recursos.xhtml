@@ -41,7 +41,7 @@
 							<f:facet name="header">
 								<h:outputText value="Estado" />
 							</f:facet>
-							<h:outputText id="estadoId" value="#{_item.estado}" />
+							<h:outputText id="estadoId" value="#{_item.estado == 1 ? 'DISPONIBLE' : 'OCUPADO'}" />
 						</ace:column>
 						
 						<ace:column id="costo">
@@ -61,17 +61,28 @@
 							</f:facet>
 
 							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
-								rendered="#{_item.editable}" type="button">
+								rendered="#{_item.editable}" type="button"
+								actionListener="#{recursoBean.editarRecurso}">
 								<f:ajax execute="@this" render="@all" />
 							</h:commandButton>
-						</ace:column>				
+						</ace:column>	
+						
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver" 
+								actionListener="#{recursoBean.verVersion}">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>							
+						</ace:column>			
 						
 						<ace:column id="eliminar">
 							<f:facet name="header">
 								<h:outputText value="Eliminar" />
 							</f:facet>
 							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
-								type="button">
+								type="button" actionListener="#{recursoBean.eliminarRecurso}">
 								<f:ajax execute="@this" render="@all" />
 							</h:commandButton>
 						</ace:column>											
@@ -91,7 +102,7 @@
 
 						<ace:textEntry id="dialogNombreRecurso" value="#{recursoBean.nombreRecurso}"
 							label="Nombre: " labelPosition="left" required="false"
-							requiredIndicator="(*)">
+							requiredIndicator="(*)" disabled="#{recursoBean.ver}">
 						</ace:textEntry>
 						<!-- 
 						<ace:textEntry id="dialogTipoRecurso" value="0"
@@ -99,10 +110,58 @@
 							requiredIndicator="(*)">
 						</ace:textEntry>
 						 -->
+						 
+						 <ace:textEntry id="dialogEstadoRecurso" value="#{recursoBean.estadoRecurso == 1 ? 'DISPONIBLE' : 'OCUPADO'}"
+							label="Estado Recurso: " labelPosition="left" required="false"
+							requiredIndicator="(*)" rendered="#{recursoBean.ver}" disabled="#{recursoBean.ver}">
+						</ace:textEntry>
+						 
 						<ace:textEntry id="dialogCostoRecurso" value="#{recursoBean.costoRecurso}"
 							label="Costo Recurso: " labelPosition="left" required="false"
-							requiredIndicator="(*)">
+							requiredIndicator="(*)" disabled="#{recursoBean.ver}">
 						</ace:textEntry>
+						
+						<ace:textEntry id="dialogUsuarioCreacionRecurso" value="#{recursoBean.usuarioCreacionRecurso}"
+							label="Usuario creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" rendered="#{recursoBean.ver}" disabled="#{recursoBean.ver}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogUsuarioUltimoCambioRecurso" value="#{recursoBean.usuarioUltimoCambioRecurso}"
+							label="Usuario último cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" rendered="#{recursoBean.ver}" disabled="#{recursoBean.ver}">
+						</ace:textEntry>
+						
+						<!-- <ace:dateTimeEntry id="dialogFechaCreacionRecurso"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   label="Fecha de creación:"
+                                   labelPosition="left"
+                                   value="#{recursoBean.fechaCreacionRecurso}"
+                                   rendered="#{recursoBean.ver}"
+                                   disabled="#{recursoBean.ver}"/>
+                                   
+                         <ace:dateTimeEntry id="dialogFechaUltimoCambioRecurso"
+                                   timeZone="American/Bogota"
+                                   pattern="dd/MMM/yyyy"
+                                   renderAsPopup="true"
+                                   requiredIndicator="(*)"
+                                   label="Fecha último cambio: "
+                                   labelPosition="left"
+                                   value="#{recursoBean.fechaUltimoCambioRecurso}"
+                                   rendered="#{recursoBean.ver}"
+                                   disabled="#{recursoBean.ver}"/> -->
+						
+						<ace:textEntry id="dialogFechaCreacionRecurso" value="#{recursoBean.fechaCreacionRecurso}"
+							label="Fecha creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" rendered="#{recursoBean.ver}" disabled="#{recursoBean.ver}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogFechaUltimoCambioRecurso" value="#{recursoBean.fechaUltimoCambioRecurso}"
+							label="Fecha último cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" rendered="#{recursoBean.ver}" disabled="#{recursoBean.ver}">
+						</ace:textEntry>			
 						
 						<ace:pushButton id="dialogRecursoBtnGuardar"
 							actionListener="#{recursoBean.saveAction}" label="Guardar">
