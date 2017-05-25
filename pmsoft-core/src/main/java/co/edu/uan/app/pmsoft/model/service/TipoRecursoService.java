@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import co.edu.uan.app.pmsoft.model.entity.TipoRecurso;
-import co.edu.uan.app.pmsoft.model.entity.Version;
 
 @Remote
 @Stateless
@@ -33,5 +32,5 @@ public class TipoRecursoService {
 		
 		return newTipoRecurso;		
 	}
-
+	
 }

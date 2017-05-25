@@ -1,5 +1,6 @@
 package co.edu.uan.app.pmsoft.view;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -19,8 +20,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import co.edu.uan.app.pmsoft.model.entity.Recurso;
+import co.edu.uan.app.pmsoft.model.entity.TipoRecurso;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 import co.edu.uan.app.pmsoft.model.service.RecursoService;
+import co.edu.uan.app.pmsoft.model.service.TipoRecursoService;
 import co.edu.uan.app.pmsoft.util.FacesUtils;
 
 @ManagedBean(name = RecursoBean.BEAN_NAME)
@@ -35,9 +38,14 @@ public class RecursoBean implements Serializable {
 	@EJB
 	RecursoService recursoService;
 	
+	@EJB
+	TipoRecursoService tipoRecursoService;
+	
 	private Recurso recurso;
 	private List<Recurso> listaRecursos;
+	private List<TipoRecurso> listaTipoRecursos;
 	private List<SelectItem> listSelectItem;
+	private SelectItem selectItem;
 	private String headerDialog;
 	private boolean visiblePopup;
 	private boolean ver;
@@ -51,6 +59,7 @@ public class RecursoBean implements Serializable {
 		this.listaRecursos = null;
 		this.visiblePopup = false;
 		this.ver = false;
+		this.listaTipoRecursos = null;
 	}
 	
 	public List<Recurso> getRecursoAll() {
@@ -58,15 +67,20 @@ public class RecursoBean implements Serializable {
 		return this.listaRecursos;
 	}
 	
+	public List<TipoRecurso> getTipoRecursoAll() {
+		this.listaTipoRecursos = tipoRecursoService.getAll();
+		return this.listaTipoRecursos;
+	}
+
 	public void agregarRecurso(ActionEvent event) {
 		logger.info("Entro a agregarRecurso(event:" + event + ")");
 		
 		this.recurso = new Recurso();
 		this.recurso.setVersion(1);
 		this.recurso.setNombre("");
-		// TODO Falta agregar TipoRecurso
-		this.recurso.setEstado(Constantes.ESTADO_ACTIVO); // TODO Con qué estado se inicializa?
-		this.recurso.setCosto(0.0); // TODO Es double?
+		this.recurso.setTipoRecurso(null); // TODO
+		this.recurso.setEstado(Constantes.ESTADO_ACTIVO);
+		this.recurso.setCosto(0);
 		this.recurso.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
 		this.recurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
 		this.recurso.setFechaUltimoCambio(new Date());
@@ -74,6 +88,7 @@ public class RecursoBean implements Serializable {
 		this.recurso.setEditable(true);
 		this.headerDialog = "Nuevo recurso";
 		this.ver = false;
+				
 		this.openPopup();
 	}
 	
@@ -91,7 +106,7 @@ public class RecursoBean implements Serializable {
 				logger.error("Error al guardar recurso. "+e.getMessage());
 			}
 		}
-
+		
 		logger.info("Saliendo de saveAction()");
 		return PAGE_NAME;
 	}
@@ -232,7 +247,27 @@ public class RecursoBean implements Serializable {
 		logger.info("Saliendo de cancelAction()");
 		return PAGE_NAME;
 	}
+	
+	public List<SelectItem> getListSelectItem(){
+		
+		// TODO
+		
+		this.getTipoRecursoAll();
+		
+		this.listSelectItem = new ArrayList<SelectItem>();
+		
+		if(this.listaTipoRecursos != null){
+			for (TipoRecurso tipoRecurso : listaTipoRecursos) {
+				this.listSelectItem.add(new SelectItem(tipoRecurso.getId(), tipoRecurso.getNombre()));
+			}
+		}
+		                                               
+		return listSelectItem;
+	}
 
+	public void popupClose() {
+		this.visiblePopup = false;
+	}
 	
 	public SessionBean getSessionBean() {
 		return sessionBean;
@@ -294,14 +329,14 @@ public class RecursoBean implements Serializable {
 		return estado;
 	}
 	
-	public void setCostoRecurso(Double costo) {
+	public void setCostoRecurso(Integer costo) {
 		if (this.recurso != null) {
 			this.recurso.setCosto(costo);
 		}
 	}
 	
-	public Double getCostoRecurso() {
-		Double costo = null;
+	public Integer getCostoRecurso() {
+		Integer costo = null;
 		
 		if (this.recurso != null) {
 			costo = this.recurso.getCosto();
@@ -380,7 +415,5 @@ public class RecursoBean implements Serializable {
 	public void setVer(boolean ver) {
 		this.ver = ver;
 	}
-	
-	
 
 }

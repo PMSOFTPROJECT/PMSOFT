@@ -10,7 +10,7 @@
 	
 		<h:form id="form1" styleClass="contentFeature">
 		
-			<ace:panel header="Gestionar Versiones">
+			<ace:panel header="Gestionar Recursos">
 			
 				<h:panelGroup>
 					
@@ -104,12 +104,13 @@
 							label="Nombre: " labelPosition="left" required="false"
 							requiredIndicator="(*)" disabled="#{recursoBean.ver}">
 						</ace:textEntry>
-						<!-- 
-						<ace:textEntry id="dialogTipoRecurso" value="0"
-							label="Tipo Recurso: " labelPosition="left" required="false"
-							requiredIndicator="(*)">
-						</ace:textEntry>
-						 -->
+						
+						<ace:comboBox id="combo"
+	                    			value="0"
+									label="Tipo de recurso: " 
+									labelPosition="left">
+							<f:selectItems value="#{recursoBean.listSelectItem}"/>
+						</ace:comboBox>
 						 
 						 <ace:textEntry id="dialogEstadoRecurso" value="#{recursoBean.estadoRecurso == 1 ? 'DISPONIBLE' : 'OCUPADO'}"
 							label="Estado Recurso: " labelPosition="left" required="false"
@@ -164,13 +165,22 @@
 						</ace:textEntry>			
 						
 						<ace:pushButton id="dialogRecursoBtnGuardar"
-							actionListener="#{recursoBean.saveAction}" label="Guardar">
+							actionListener="#{recursoBean.saveAction}" label="Guardar"
+							rendered="#{!recursoBean.ver}">
 						</ace:pushButton>
 						
 						<ace:pushButton id="dialogRecursoBtnCancelar"
-							actionListener="#{recursoBean.cancelAction}" label="Cancelar">
+							actionListener="#{recursoBean.cancelAction}" label="Cancelar" 
+							rendered="#{!recursoBean.ver}">
 						</ace:pushButton>
-					
+						
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{recursoBean.popupClose}"
+                                             rendered="#{recursoBean.ver}"/>
+                        </h:panelGroup>					
 					</h:panelGrid>
 				</ace:dialog>
 			</h:panelGroup>

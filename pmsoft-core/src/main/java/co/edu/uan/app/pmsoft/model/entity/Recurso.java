@@ -5,9 +5,12 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Version;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Recurso implements Serializable {
@@ -24,13 +27,15 @@ public class Recurso implements Serializable {
 	@Column(name = "recurso_nombre", nullable = false)
 	private String nombre;
 	
-	// TODO Falta Relación TipoRecurso
+	@JoinColumn(name = "recurso_tiporecurso_id", referencedColumnName = "tiporecurso_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private TipoRecurso tipoRecurso;
 	
 	@Column(name = "recurso_estado", nullable = false)
 	private Integer estado;
 	
 	@Column(name = "recurso_costo", nullable = false)
-	private Double costo;
+	private Integer costo;
 	
 	@Column(name = "recurso_editable", nullable = false)
 	private Boolean editable;
@@ -79,11 +84,11 @@ public class Recurso implements Serializable {
 		this.estado = estado;
 	}
 
-	public Double getCosto() {
+	public Integer getCosto() {
 		return costo;
 	}
 
-	public void setCosto(Double costo) {
+	public void setCosto(Integer costo) {
 		this.costo = costo;
 	}
 
@@ -126,5 +131,13 @@ public class Recurso implements Serializable {
 	public void setFechaUltimoCambio(Date fechaUltimoCambio) {
 		this.fechaUltimoCambio = fechaUltimoCambio;
 	}
-		
+
+	public TipoRecurso getTipoRecurso() {
+		return tipoRecurso;
+	}
+
+	public void setTipoRecurso(TipoRecurso tipoRecurso) {
+		this.tipoRecurso = tipoRecurso;
+	}
+			
 }

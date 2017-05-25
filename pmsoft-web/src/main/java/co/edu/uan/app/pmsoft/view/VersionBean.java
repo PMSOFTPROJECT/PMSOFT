@@ -462,9 +462,6 @@ public class VersionBean implements Serializable {
 		return estado;
 	}
 	
-	
-	
-	
 	public String getDescripcionNotificacion() {
 		return descripcionNotificacion;
 	}
