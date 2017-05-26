@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import co.edu.uan.app.pmsoft.model.entity.TipoDocumento;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 
+
 @Remote
 @Stateless
 public class TipoDocumentoService {

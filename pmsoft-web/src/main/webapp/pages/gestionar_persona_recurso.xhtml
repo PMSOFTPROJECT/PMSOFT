@@ -1,0 +1,181 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+
+		<h:form id="form1" styleClass="contentFeature">
+
+			<ace:panel header="Gestionar Persona_Recurso">
+
+				<h:panelGroup>
+
+					<ace:dataTable id="dataTablePersonaRecurso" value="#{personaRecursoBean.personaRecursoAll}"
+						var="_item">
+
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="personaRecursoId" value="#{_item.id}" />
+						</ace:column>
+
+						<ace:column id="persona">
+							<f:facet name="header">
+								<h:outputText value="Persona" />
+							</f:facet>
+							<h:outputText id="personaPersonaRecurso" value="#{_item.persona}" />
+						</ace:column>
+
+						<ace:column id="recurso">
+							<f:facet name="header">
+								<h:outputText value="Recurso" />
+							</f:facet>
+							<h:outputText id="recursoPersonaRecurso" value="#{_item.recurso}" />
+						</ace:column>
+
+						<ace:column id="estado">
+							<f:facet name="header">
+								<h:outputText value="Estado" />
+							</f:facet>
+							<h:outputText id="estadoPersonaRecurso" value="#{_item.estado}" />
+						</ace:column>
+
+						<ace:column id="acciones">
+							<f:facet name="header">
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
+									actionListener="#{personaRecursoBean.agregarPersonaRecurso}" type="button">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" actionListener="#{personaRecursoBean.editarPersonaRecurso}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver"
+								rendered="true" actionListener="#{personaRecursoBean.verPersonaRecurso}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								rendered="true"
+								type="button"
+								actionListener="#{personaRecursoBean.eliminarPersonaRecurso}"
+								onclick="ice.ace.instance('#{confirm.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirm" binding="#{confirm}"
+                                    message="¿Está seguro que desea eliminar el personaRecurso? El personaRecurso pasará de un estado ACTIVO a un estado INACTIVO"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="yes" value="Si" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{personaRecursoBean.deleteAction}">
+					                    </h:commandButton>
+					                    <h:commandButton id="no" value="No" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{personaRecursoBean.popupClose()}">
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>
+					</ace:dataTable>
+				</h:panelGroup>
+			</ace:panel>
+		</h:form>
+
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos del Documento -->
+				<ace:dialog id="dialogPersonaRecurso" visible="#{personaRecursoBean.visiblePopup}"
+					closable="false" header="#{personaRecursoBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+					
+					<h:panelGrid>
+						<ace:textEntry id="dialogPersonaPersonaRecurso" value="#{personaRecursoBean.personaPersonaRecurso}"
+							label="Persona: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}" rendered="#{!personaRecursoBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogRecursoPersonaRecurso" value="#{personaRecursoBean.recursoPersonaRecurso}"
+							label="Recurso: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}" rendered="#{!personaRecursoBean.visibleDelete}">
+						</ace:textEntry>						
+
+						<ace:textEntry id="dialogEstadoPersonaRecurso" value="#{personaRecursoBean.estadoPersonaRecurso}"
+							label="Estado: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}"
+							rendered="#{!personaRecursoBean.visibleView and !personaRecursoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaCreacionPersonaRecurso" value="#{personaRecursoBean.fechaCreacionPersonaRecurso}"
+							label="Fecha de Creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}"
+							rendered="#{!personaRecursoBean.visibleView and !personaRecursoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioCreacionPersonaRecurso" value="#{personaRecursoBean.usuarioCreacionPersonaRecurso}"
+							label="Usuario Creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}"
+							rendered="#{!personaRecursoBean.visibleView and !personaRecursoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaUltimoCambioPersonaRecurso" value="#{personaRecursoBean.fechaUltimoCambioPersonaRecurso}"
+							label="Fecha Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}"
+							rendered="#{!personaRecursoBean.visibleView and !personaRecursoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioUltimoCambioPersonaRecurso" value="#{personaRecursoBean.usuarioUltimoCambioPersonaRecurso}"
+							label="Usuario Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}"
+							rendered="#{!personaRecursoBean.visibleView and !personaRecursoBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:pushButton id="dialogPersonaRecursoBtnGuardar"
+							actionListener="#{personaRecursoBean.saveAction}" label="Guardar" rendered="#{!personaRecursoBean.visibleEdit and !personaRecursoBean.visibleDelete}">
+						</ace:pushButton>
+						
+						<ace:pushButton id="dialogPersonaRecursoBtnEliminar"
+ 							actionListener="#{personaRecursoBean.deleteAction}" label="Eliminar" rendered="#{personaRecursoBean.visibleDelete}">
+ 						</ace:pushButton>
+ 						 						
+						<ace:pushButton id="dialogPersonaRecursoBtnCancelar"
+							actionListener="#{personaRecursoBean.cancelAction}" label="Cancelar" rendered="#{!personaRecursoBean.visibleEdit}">
+						</ace:pushButton>
+
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{personaRecursoBean.popupClose}"
+                                             rendered="#{!personaRecursoBean.visibleView}"/>
+                        </h:panelGroup>
+                        <ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""/>
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+		</h:form>		
+	</ui:define>
+
+</ui:composition>

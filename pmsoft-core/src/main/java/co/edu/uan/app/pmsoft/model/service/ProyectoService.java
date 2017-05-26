@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import co.edu.uan.app.pmsoft.model.entity.Proyecto;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 
+
 @Remote
 @Stateless
 public class ProyectoService {
@@ -54,7 +55,6 @@ public class ProyectoService {
 			throw new IllegalArgumentException("No hay objeto proyecto para eliminar");
 		}
 		
-		project.setEstado(Constantes.ESTADO_INACTIVO);
 		delProject = this.em.merge(project);
 		
 		return delProject;

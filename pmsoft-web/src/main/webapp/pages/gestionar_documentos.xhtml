@@ -1,0 +1,193 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+
+		<h:form id="form1" styleClass="contentFeature">
+
+			<ace:panel header="Gestionar Documentos">
+
+				<h:panelGroup>
+
+					<ace:dataTable id="dataTableDocumentos" value="#{documentoBean.documentosAll}"
+						var="_item">
+
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="documentoId" value="#{_item.id}" />
+						</ace:column>
+
+						<ace:column id="ruta">
+							<f:facet name="header">
+								<h:outputText value="Ruta" />
+							</f:facet>
+							<h:outputText id="rutaDocumento" value="#{_item.ruta}" />
+						</ace:column>
+
+						<ace:column id="nombre">
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText id="nombreDocumento" value="#{_item.nombre}" />
+						</ace:column>
+
+						<ace:column id="actividad">
+							<f:facet name="header">
+								<h:outputText value="Actividad" />
+							</f:facet>
+							<h:outputText id="actividadDocumento" value="#{_item.actividad}" />
+						</ace:column>
+
+						<ace:column id="estado">
+							<f:facet name="header">
+								<h:outputText value="Estado" />
+							</f:facet>
+							<h:outputText id="estadoDocumento" value="#{_item.estado}" />
+						</ace:column>
+
+						<ace:column id="acciones">
+							<f:facet name="header">
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
+									actionListener="#{documentoBean.agregarDocumento}" type="button">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" actionListener="#{documentoBean.editarDocumento}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver"
+								rendered="true" actionListener="#{documentoBean.verDocumento}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								rendered="true"
+								type="button"
+								actionListener="#{documentoBean.eliminarDocumento}"
+								onclick="ice.ace.instance('#{confirm.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirm" binding="#{confirm}"
+                                    message="¿Está seguro que desea eliminar el documento? El documento pasará de un estado ACTIVO a un estado INACTIVO"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="yes" value="Si" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{documentoBean.deleteAction}">
+					                    </h:commandButton>
+					                    <h:commandButton id="no" value="No" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{documentoBean.popupClose()}">
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>
+					</ace:dataTable>
+				</h:panelGroup>
+			</ace:panel>
+		</h:form>
+
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos del Documento -->
+				<ace:dialog id="dialogDocumento" visible="#{documentoBean.visiblePopup}"
+					closable="false" header="#{documentoBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+					
+					<h:panelGrid>
+						<ace:textEntry id="dialogRutaDocumento" value="#{documentoBean.rutaDocumento}"
+							label="Ruta: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}" rendered="#{!documentoBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogNombreDocumento" value="#{documentoBean.nombreDocumento}"
+							label="Nombre: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}" rendered="#{!documentoBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:textEntry id="dialogActividadDocumento" value="#{documentoBean.actividadDocumento}"
+							label="Actividad: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}" rendered="#{!documentoBean.visibleDelete}">
+						</ace:textEntry>						
+
+						<ace:textEntry id="dialogEstadoDocumento" value="#{documentoBean.estadoDocumento}"
+							label="Estado: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}"
+							rendered="#{!documentoBean.visibleView and !documentoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaCreacionDocumento" value="#{documentoBean.fechaCreacionDocumento}"
+							label="Fecha de Creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}"
+							rendered="#{!documentoBean.visibleView and !documentoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioCreacionDocumento" value="#{documentoBean.usuarioCreacionDocumento}"
+							label="Usuario Creación: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}"
+							rendered="#{!documentoBean.visibleView and !documentoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaUltimoCambioDocumento" value="#{documentoBean.fechaUltimoCambioDocumento}"
+							label="Fecha Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}"
+							rendered="#{!documentoBean.visibleView and !documentoBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioUltimoCambioDocumento" value="#{documentoBean.usuarioUltimoCambioDocumento}"
+							label="Usuario Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{documentoBean.visibleEdit}"
+							rendered="#{!documentoBean.visibleView and !documentoBean.visibleDelete}">
+						</ace:textEntry>
+						
+						<ace:pushButton id="dialogDocumentoBtnGuardar"
+							actionListener="#{documentoBean.saveAction}" label="Guardar" rendered="#{!documentoBean.visibleEdit and !documentoBean.visibleDelete}">
+						</ace:pushButton>
+						
+						<ace:pushButton id="dialogDocumentoBtnEliminar"
+ 							actionListener="#{documentoBean.deleteAction}" label="Eliminar" rendered="#{documentoBean.visibleDelete}">
+ 						</ace:pushButton>
+ 						 						
+						<ace:pushButton id="dialogDocumentoBtnCancelar"
+							actionListener="#{documentoBean.cancelAction}" label="Cancelar" rendered="#{!documentoBean.visibleEdit}">
+						</ace:pushButton>
+
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{documentoBean.popupClose}"
+                                             rendered="#{!documentoBean.visibleView}"/>
+                        </h:panelGroup>
+                        <ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""/>
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+		</h:form>		
+	</ui:define>
+
+</ui:composition>
