@@ -28,11 +28,9 @@ public class TipoDocumentoService {
 
 	public TipoDocumento getById(long id) throws Exception {
 		
-		TipoDocumento documento = this.em.find(TipoDocumento.class, id);
+		TipoDocumento documento = null;
+		documento = this.em.find(TipoDocumento.class, id);
 		
-		if (documento == null) {
-			throw new Exception("No hay objeto con ese id");
-		}
 		
 		return documento;
 	}

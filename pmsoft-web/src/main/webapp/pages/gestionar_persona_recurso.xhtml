@@ -107,16 +107,31 @@
 					closable="false" header="#{personaRecursoBean.headerDialog}" draggable="true"
 					modal="true" width="400">
 					
-					<h:panelGrid>
-						<ace:textEntry id="dialogPersonaPersonaRecurso" value="#{personaRecursoBean.personaPersonaRecurso}"
+						<ace:comboBox id="combo"
+	                    			value="#{personaRecursoBean.personaRecurso.persona.id}"
+									label="Persona: " 
+									labelPosition="left"
+									rendered="#{!personaRecursoBean.ver}">
+							<f:selectItems value="#{personaRecursoBean.listSelectItemPersona}"/>
+						</ace:comboBox>
+						
+						<ace:textEntry id="dialogPersona" value="#{personaRecursoBean.personaRecurso.persona.nombre}"
 							label="Persona: " labelPosition="left" required="false"
-							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}" rendered="#{!personaRecursoBean.visibleDelete}">
+							requiredIndicator="(*)" rendered="#{personaRecursoBean.ver}" disabled="#{personaRecursoBean.ver}">
 						</ace:textEntry>
 						
-						<ace:textEntry id="dialogRecursoPersonaRecurso" value="#{personaRecursoBean.recursoPersonaRecurso}"
+						<ace:comboBox id="combo"
+	                    			value="#{personaRecursoBean.personaRecurso.recurso.id}"
+									label="Recurso: " 
+									labelPosition="left"
+									rendered="#{!personaRecursoBean.ver}">
+							<f:selectItems value="#{personaRecursoBean.listSelectItemRecurso}"/>
+						</ace:comboBox>
+						
+						<ace:textEntry id="dialogRecurso" value="#{personaRecursoBean.personaRecurso.recurso.nombre}"
 							label="Recurso: " labelPosition="left" required="false"
-							requiredIndicator="(*)" readonly="#{personaRecursoBean.visibleEdit}" rendered="#{!personaRecursoBean.visibleDelete}">
-						</ace:textEntry>						
+							requiredIndicator="(*)" rendered="#{personaRecursoBean.ver}" disabled="#{personaRecursoBean.ver}">
+						</ace:textEntry>
 
 						<ace:textEntry id="dialogEstadoPersonaRecurso" value="#{personaRecursoBean.estadoPersonaRecurso}"
 							label="Estado: " labelPosition="left" required="false"
@@ -172,8 +187,7 @@
                                closeAll="true"
                                maxVisibleMessages="0"
                                position="top-right" header=""/>
-					</h:panelGrid>
-				</ace:dialog>
+					</h:panelGrid>				</ace:dialog>
 			</h:panelGroup>
 		</h:form>		
 	</ui:define>

@@ -22,8 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import co.edu.uan.app.pmsoft.model.entity.Persona;
+import co.edu.uan.app.pmsoft.model.entity.TipoDocumento;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 import co.edu.uan.app.pmsoft.model.service.PersonaService;
+import co.edu.uan.app.pmsoft.model.service.TipoDocumentoService;
 import co.edu.uan.app.pmsoft.util.FacesUtils;
 
 @ManagedBean(name = PersonaBean.BEAN_NAME)
@@ -37,9 +39,13 @@ public class PersonaBean implements Serializable {
 
 	@EJB
 	PersonaService personaService;
+	
+	@EJB
+	TipoDocumentoService tipoDocumentoService;
 
 	private Persona persona;
 	private List<Persona> listaPersonas;
+	private List<TipoDocumento> listaTipoDocumento;
 	private List<SelectItem> listSelectItem;
 	private SelectItem selectItem;
 	private String headerDialog;
@@ -47,6 +53,7 @@ public class PersonaBean implements Serializable {
 	private boolean visibleEdit;
 	private boolean visibleView;
 	private boolean visibleDelete;
+	private boolean ver;
 
 
 	@Inject
@@ -61,6 +68,26 @@ public class PersonaBean implements Serializable {
 		this.visibleEdit = false;
 		this.visibleView = false;
 		this.visibleDelete = false;
+		this.ver = false;
+		this.listaTipoDocumento = null;
+		
+		this.persona = new Persona();
+		this.persona.setNombre("");
+		this.persona.setCostoHora(0);
+		this.persona.setCargo("");
+		this.persona.setTelefono("");
+		this.persona.setDireccion("");
+		this.persona.setEmail("");
+		this.persona.setTipoDocumento(new TipoDocumento());
+		this.persona.setIdentificacion("");
+		this.persona.setNombreContactoEmergencia("");
+		this.persona.setTelefonoContactoEmergencia("");
+		this.persona.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
+		this.persona.setFechaCreacion(new Date());
+		this.persona.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+		this.persona.setFechaUltimoCambio(new Date());
+		this.persona.setEstado(Constantes.ESTADO_ACTIVO);
+		this.persona.setEditable(true);
 	}
 
 	private void openPopup() {
@@ -69,6 +96,11 @@ public class PersonaBean implements Serializable {
 
 	private void closedPopup() {
 		this.visiblePopup = false;
+	}
+	
+	public List<TipoDocumento> getTipoDocumentoAll() {
+		this.listaTipoDocumento = tipoDocumentoService.getAll();
+		return this.listaTipoDocumento;
 	}
 
 	public List<Persona> getPersonaAll() {
@@ -86,7 +118,7 @@ public class PersonaBean implements Serializable {
 		this.persona.setTelefono("");
 		this.persona.setDireccion("");
 		this.persona.setEmail("");
-		this.persona.setTipoDocumento("");
+		this.persona.setTipoDocumento(new TipoDocumento());
 		this.persona.setIdentificacion("");
 		this.persona.setNombreContactoEmergencia("");
 		this.persona.setTelefonoContactoEmergencia("");
@@ -96,13 +128,14 @@ public class PersonaBean implements Serializable {
 		this.persona.setFechaUltimoCambio(new Date());
 		this.persona.setEstado(Constantes.ESTADO_ACTIVO);
 		this.persona.setEditable(true);
+		this.ver = false;
 
 		this.headerDialog = "Nueva Persona";
 		this.openPopup();
 		this.visibleEdit = false;
 		this.visibleView = true;
 		this.visibleDelete = false;
-		logger.info("Saliendo de addPersona(rol:" + persona + ")");
+		logger.info("Saliendo de addPersona(persona:" + persona + ")");
 	}
 
 	public String saveAction(ActionEvent event) {
@@ -110,6 +143,9 @@ public class PersonaBean implements Serializable {
         
 		if (validateSaveAction(event)) {
 			try {
+				this.persona.setTipoDocumento(tipoDocumentoService.getById(this.persona.getTipoDocumento().getId()));
+				
+				
 				personaService.save(this.persona);
 				this.getPersonaAll();
 				this.closedPopup();
@@ -167,10 +203,6 @@ public class PersonaBean implements Serializable {
 			detail = "Se debe ingresar un correo electrónico";
 			valid = false;
 			
-		} else if (StringUtils.isBlank(persona.getTipoDocumento())) {
-			detail = "Se debe ingresar un tipo de documento";
-			valid = false;
-			
 		} else if (StringUtils.isBlank(persona.getIdentificacion())) {
 			detail = "Se debe ingresar una identificación";
 			valid = false;
@@ -187,6 +219,9 @@ public class PersonaBean implements Serializable {
 			detail = "Se debe ingresar un teléfono de contacto de emergencia";
 			valid = false;
 			
+		} else if (this.persona.getTipoDocumento() == null || this.persona.getTipoDocumento().getId() == null) {
+			detail = "Se debe ingresar el tipo del documento";	
+			valid = false;
 		}
 
 		if (!valid) {			
@@ -224,6 +259,7 @@ public class PersonaBean implements Serializable {
 		this.visibleEdit = false;
 		this.visibleView = true;
 		this.visibleDelete = false;
+		this.ver = false;
 
 		logger.info("Saliendo de editPersona(persona:" + persona + ")");
 
@@ -269,7 +305,8 @@ public class PersonaBean implements Serializable {
             	this.persona = (Persona) tmpRowData;
             }
         }
-
+        
+        this.ver = true;
         this.visibleEdit = true;
         this.visibleView = false;
         this.visibleDelete = false;
@@ -323,12 +360,14 @@ public class PersonaBean implements Serializable {
 	}
 
 	public List<SelectItem> getListSelectItem(){
+		
+		this.getTipoDocumentoAll();
 
 		this.listSelectItem = new ArrayList<SelectItem>();
 
-		if(this.listaPersonas != null){
-			for (Persona persona : listaPersonas) {
-				this.listSelectItem.add(new SelectItem(persona.getId(), persona.getNombre()));
+		if(this.listaTipoDocumento != null){
+			for (TipoDocumento tipoDocumento : listaTipoDocumento) {
+				this.listSelectItem.add(new SelectItem(tipoDocumento.getId(), tipoDocumento.getNombre()));
 			}
 		}
 
@@ -343,6 +382,14 @@ public class PersonaBean implements Serializable {
 		logger.info("Saliendo de cancelAction()");
 		return PAGE_NAME;
 	}
+	
+	public boolean isVer() {
+		return ver;
+	}
+
+	public void setVer(boolean ver) {
+		this.ver = ver;
+	}
 
 	public String getHeaderDialog() {
 		return this.headerDialog;
@@ -353,11 +400,7 @@ public class PersonaBean implements Serializable {
 	}
 
 	public Persona getPersona() {
-		logger.info("this.persona = " + this.persona);
-		if (this.persona != null)
-			logger.info("this.persona.getNombre() = " + this.persona.getNombre());
-
-		return this.persona;
+		return persona;
 	}
 
 	public void setPersona(Persona persona) {
@@ -468,21 +511,6 @@ public class PersonaBean implements Serializable {
 	public void setEmailPersona(String email){
 		if(this.persona != null){
 			this.persona.setEmail(email);
-		}
-	}
-	
-	public String getTipoDocumentoPersona(){
-		String tipo = "";
-		if(this.persona != null){
-			tipo = this.persona.getTipoDocumento();
-		}
-
-		return tipo;
-	}
-
-	public void setTipoDocumentoPersona(String tipo){
-		if(this.persona != null){
-			this.persona.setTipoDocumento(tipo);
 		}
 	}
 	
