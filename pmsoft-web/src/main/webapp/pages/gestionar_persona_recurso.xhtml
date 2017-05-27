@@ -28,14 +28,14 @@
 							<f:facet name="header">
 								<h:outputText value="Persona" />
 							</f:facet>
-							<h:outputText id="personaPersonaRecurso" value="#{_item.persona}" />
+							<h:outputText id="personaPersonaRecurso" value="#{_item.persona.nombre}" />
 						</ace:column>
 
 						<ace:column id="recurso">
 							<f:facet name="header">
 								<h:outputText value="Recurso" />
 							</f:facet>
-							<h:outputText id="recursoPersonaRecurso" value="#{_item.recurso}" />
+							<h:outputText id="recursoPersonaRecurso" value="#{_item.recurso.nombre}" />
 						</ace:column>
 
 						<ace:column id="estado">
@@ -48,7 +48,7 @@
 						<ace:column id="acciones">
 							<f:facet name="header">
 								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
-									actionListener="#{personaRecursoBean.agregarPersonaRecurso}" type="button">
+									type="button" actionListener="#{personaRecursoBean.agregarPersonaRecurso}">
 									<f:ajax execute="@this" render="@all" />
 								</h:commandButton>
 							</f:facet>
@@ -106,8 +106,9 @@
 				<ace:dialog id="dialogPersonaRecurso" visible="#{personaRecursoBean.visiblePopup}"
 					closable="false" header="#{personaRecursoBean.headerDialog}" draggable="true"
 					modal="true" width="400">
-					
-						<ace:comboBox id="combo"
+						
+					<h:panelGrid>
+						<ace:comboBox id="comboPersona"
 	                    			value="#{personaRecursoBean.personaRecurso.persona.id}"
 									label="Persona: " 
 									labelPosition="left"
@@ -120,7 +121,7 @@
 							requiredIndicator="(*)" rendered="#{personaRecursoBean.ver}" disabled="#{personaRecursoBean.ver}">
 						</ace:textEntry>
 						
-						<ace:comboBox id="combo"
+						<ace:comboBox id="comboRecurso"
 	                    			value="#{personaRecursoBean.personaRecurso.recurso.id}"
 									label="Recurso: " 
 									labelPosition="left"
@@ -182,13 +183,19 @@
                                              actionListener="#{personaRecursoBean.popupClose}"
                                              rendered="#{!personaRecursoBean.visibleView}"/>
                         </h:panelGroup>
-                        <ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+					
+					
+					
+					</h:panelGrid>	
+					
+				</ace:dialog>
+			</h:panelGroup>
+			<ace:growlMessages  id="allMsgsGrowl" autoHide="true"
                                 for="@inView"
                                closeAll="true"
                                maxVisibleMessages="0"
-                               position="top-right" header=""/>
-					</h:panelGrid>				</ace:dialog>
-			</h:panelGroup>
+                               position="top-right" header=""
+                               rendered="false"/>
 		</h:form>		
 	</ui:define>
 

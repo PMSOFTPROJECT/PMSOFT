@@ -88,6 +88,8 @@ public class PersonaBean implements Serializable {
 		this.persona.setFechaUltimoCambio(new Date());
 		this.persona.setEstado(Constantes.ESTADO_ACTIVO);
 		this.persona.setEditable(true);
+		
+		logger.info("TIPO DOC: " + this.persona.getTipoDocumento());
 	}
 
 	private void openPopup() {
@@ -143,9 +145,8 @@ public class PersonaBean implements Serializable {
         
 		if (validateSaveAction(event)) {
 			try {
+								
 				this.persona.setTipoDocumento(tipoDocumentoService.getById(this.persona.getTipoDocumento().getId()));
-				
-				
 				personaService.save(this.persona);
 				this.getPersonaAll();
 				this.closedPopup();

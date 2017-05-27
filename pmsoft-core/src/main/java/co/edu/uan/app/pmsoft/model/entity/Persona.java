@@ -20,7 +20,7 @@ public class Persona implements Serializable {
 	@Column(name = "persona_id", updatable = false, nullable = false)
 	private Long id;	
 	
-//	@Version
+//	@javax.persistence.Version
 //	@Column(name = "persona_version")
 //	private int version;
 	

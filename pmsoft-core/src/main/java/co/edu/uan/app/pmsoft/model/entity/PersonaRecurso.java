@@ -22,6 +22,10 @@ public class PersonaRecurso implements Serializable{
 	@Column(name = "persona_recurso_id", updatable = false, nullable = false)
 	private Long id;
 	
+	@Version
+	@Column(name = "personaRecurso_version")
+	private int version;
+	
 	@JoinColumn(name = "persona_recurso_persona_id", referencedColumnName = "persona_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Persona persona;
@@ -29,11 +33,7 @@ public class PersonaRecurso implements Serializable{
 	@JoinColumn(name = "persona_recurso_recurso_id", referencedColumnName = "recurso_id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Recurso recurso;
-	
-	@Version
-	@Column(name = "personaRecurso_version")
-	private int version;
-	
+		
 	@Column(name = "persona_recurso_estado", nullable = true)
 	private Integer estado;
 	
