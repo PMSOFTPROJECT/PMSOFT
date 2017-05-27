@@ -35,7 +35,7 @@ public class RecursoBean implements Serializable {
 	public static final String PAGE_NAME = "gestionar_recursos";
 	private static final Logger logger = LoggerFactory.getLogger(RecursoBean.class);
 	
-	@EJB
+	@EJB 
 	RecursoService recursoService;
 	
 	@EJB
