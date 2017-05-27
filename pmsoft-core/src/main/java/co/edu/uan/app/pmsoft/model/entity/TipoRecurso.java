@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 @Entity
+    
 public class TipoRecurso implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

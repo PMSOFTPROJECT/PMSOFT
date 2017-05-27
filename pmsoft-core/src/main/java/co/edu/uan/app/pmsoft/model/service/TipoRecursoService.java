@@ -14,11 +14,17 @@ public class TipoRecursoService {
 	
 	@PersistenceContext(unitName = "pmsoft-unit")
 	private EntityManager em;
-	
+		
 	public List<TipoRecurso> getAll() {
 		CriteriaQuery<TipoRecurso> criteria = this.em.getCriteriaBuilder().createQuery(TipoRecurso.class);
 		return this.em.createQuery(criteria.select(criteria.from(TipoRecurso.class))).getResultList();
 
+	}
+	
+	public TipoRecurso getById(Long id) {
+		TipoRecurso tipoRecurso = null;
+		tipoRecurso = this.em.find(TipoRecurso.class, id);
+		return tipoRecurso;
 	}
 	
 	public TipoRecurso save(TipoRecurso tipoRecurso) {

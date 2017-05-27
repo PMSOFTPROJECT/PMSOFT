@@ -60,6 +60,20 @@ public class RecursoBean implements Serializable {
 		this.visiblePopup = false;
 		this.ver = false;
 		this.listaTipoRecursos = null;
+		
+		this.recurso = new Recurso();
+		this.recurso.setVersion(1);
+		this.recurso.setNombre("");
+		this.recurso.setTipoRecurso(new TipoRecurso()); // TODO
+		this.recurso.setEstado(Constantes.ESTADO_ACTIVO);
+		this.recurso.setCosto(0);
+		this.recurso.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
+		this.recurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+		this.recurso.setFechaUltimoCambio(new Date());
+		this.recurso.setFechaCreacion(new Date());
+		this.recurso.setEditable(true);
+		
+		logger.debug("RECURSO: " + this.recurso + "    " + this.recurso.getTipoRecurso());
 	}
 	
 	public List<Recurso> getRecursoAll() {
@@ -78,7 +92,7 @@ public class RecursoBean implements Serializable {
 		this.recurso = new Recurso();
 		this.recurso.setVersion(1);
 		this.recurso.setNombre("");
-		this.recurso.setTipoRecurso(null); // TODO
+		this.recurso.setTipoRecurso(new TipoRecurso()); // TODO
 		this.recurso.setEstado(Constantes.ESTADO_ACTIVO);
 		this.recurso.setCosto(0);
 		this.recurso.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
@@ -97,6 +111,9 @@ public class RecursoBean implements Serializable {
         
 		if (validateSaveAction(event)) {
 			try {				
+				logger.info("TIPOR: " + this.recurso.getTipoRecurso().getId());
+				this.recurso.setTipoRecurso(tipoRecursoService.getById(this.recurso.getTipoRecurso().getId()));
+				logger.info("TIPO RECURSO: " + this.recurso.getTipoRecurso().getNombre());
 				recursoService.save(this.recurso);
 				this.getRecursoAll();
 				this.closedPopup();
@@ -134,7 +151,7 @@ public class RecursoBean implements Serializable {
 			detail = "Se debe ingresar el nombre del recurso";	
 			valid = false;
 			
-		} else if (false) { // TODO Validar el objeto tipo recurso
+		} else if (this.recurso.getTipoRecurso() == null || this.recurso.getTipoRecurso().getId() == null) { // TODO Validar el objeto tipo recurso
 			detail = "Se debe ingresar el tipo del recurso";	
 			valid = false;
 			
@@ -414,6 +431,22 @@ public class RecursoBean implements Serializable {
 
 	public void setVer(boolean ver) {
 		this.ver = ver;
+	}
+	
+	public Recurso getRecurso() {
+		return recurso;
+	}
+
+	public void setRecurso(Recurso recurso) {
+		this.recurso = recurso;
+	}
+
+	public SelectItem getSelectItem() {
+		return selectItem;
+	}
+
+	public void setSelectItem(SelectItem selectItem) {
+		this.selectItem = selectItem;
 	}
 
 }

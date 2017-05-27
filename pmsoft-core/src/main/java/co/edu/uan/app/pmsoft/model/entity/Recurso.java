@@ -28,7 +28,7 @@ public class Recurso implements Serializable {
 	private String nombre;
 	
 	@JoinColumn(name = "recurso_tiporecurso_id", referencedColumnName = "tiporecurso_id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER) // TODO EAGER preguntar al profesor
     private TipoRecurso tipoRecurso;
 	
 	@Column(name = "recurso_estado", nullable = false)

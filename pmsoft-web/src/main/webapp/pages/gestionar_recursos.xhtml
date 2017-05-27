@@ -106,11 +106,17 @@
 						</ace:textEntry>
 						
 						<ace:comboBox id="combo"
-	                    			value="0"
+	                    			value="#{recursoBean.recurso.tipoRecurso.id}"
 									label="Tipo de recurso: " 
-									labelPosition="left">
+									labelPosition="left"
+									rendered="#{!recursoBean.ver}">
 							<f:selectItems value="#{recursoBean.listSelectItem}"/>
 						</ace:comboBox>
+						
+						 <ace:textEntry id="dialogTipoRecurso" value="#{recursoBean.recurso.tipoRecurso.nombre}"
+							label="Tipo Recurso: " labelPosition="left" required="false"
+							requiredIndicator="(*)" rendered="#{recursoBean.ver}" disabled="#{recursoBean.ver}">
+						</ace:textEntry>
 						 
 						 <ace:textEntry id="dialogEstadoRecurso" value="#{recursoBean.estadoRecurso == 1 ? 'DISPONIBLE' : 'OCUPADO'}"
 							label="Estado Recurso: " labelPosition="left" required="false"
@@ -131,28 +137,6 @@
 							label="Usuario último cambio: " labelPosition="left" required="false"
 							requiredIndicator="(*)" rendered="#{recursoBean.ver}" disabled="#{recursoBean.ver}">
 						</ace:textEntry>
-						
-						<!-- <ace:dateTimeEntry id="dialogFechaCreacionRecurso"
-                                   timeZone="American/Bogota"
-                                   pattern="dd/MMM/yyyy"
-                                   renderAsPopup="true"
-                                   requiredIndicator="(*)"
-                                   label="Fecha de creación:"
-                                   labelPosition="left"
-                                   value="#{recursoBean.fechaCreacionRecurso}"
-                                   rendered="#{recursoBean.ver}"
-                                   disabled="#{recursoBean.ver}"/>
-                                   
-                         <ace:dateTimeEntry id="dialogFechaUltimoCambioRecurso"
-                                   timeZone="American/Bogota"
-                                   pattern="dd/MMM/yyyy"
-                                   renderAsPopup="true"
-                                   requiredIndicator="(*)"
-                                   label="Fecha último cambio: "
-                                   labelPosition="left"
-                                   value="#{recursoBean.fechaUltimoCambioRecurso}"
-                                   rendered="#{recursoBean.ver}"
-                                   disabled="#{recursoBean.ver}"/> -->
 						
 						<ace:textEntry id="dialogFechaCreacionRecurso" value="#{recursoBean.fechaCreacionRecurso}"
 							label="Fecha creación: " labelPosition="left" required="false"
