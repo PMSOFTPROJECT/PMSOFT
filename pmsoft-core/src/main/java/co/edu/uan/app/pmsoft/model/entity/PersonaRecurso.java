@@ -19,6 +19,10 @@ public class PersonaRecurso implements Serializable{
 	@Column(name = "persona_recurso_id", updatable = false, nullable = false)
 	private Long id;	
 	
+	@Version
+	@Column(name = "personaRecurso_version")
+	private int version;
+	
 	@Column(name = "persona_recurso_persona", nullable = false)
 	private String persona;
 	
@@ -42,10 +46,6 @@ public class PersonaRecurso implements Serializable{
 	
 	@Column(name = "persona_recurso_usuarioultimocambio", nullable = true)
 	private String usuarioUltimoCambio;
-	
-	@Version
-	@Column(name = "personaRecurso_version")
-	private int version;
 	
 	@Override
 	public int hashCode() {

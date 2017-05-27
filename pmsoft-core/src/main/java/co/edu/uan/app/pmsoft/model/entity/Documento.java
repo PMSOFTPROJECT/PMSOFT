@@ -20,6 +20,10 @@ public class Documento implements Serializable{
 	@Column(name = "documento_id", updatable = false, nullable = false)
 	private Long id;	
 	
+	@Version
+	@Column(name = "personaRecurso_version")
+	private int version;
+	
 	@Column(name = "documento_ruta", nullable = false)
 	private String ruta;
 	
@@ -46,10 +50,6 @@ public class Documento implements Serializable{
 	
 	@Column(name = "documento_editable", nullable = true)
 	private Boolean editable;
-	
-	@Version
-	@Column(name = "documento_version")
-	private int version;
 	
 	@Override
 	public int hashCode() {

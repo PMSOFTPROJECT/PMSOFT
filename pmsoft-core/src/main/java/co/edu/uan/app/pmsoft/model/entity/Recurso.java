@@ -13,8 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
-import co.edu.uan.app.pmsoft.model.entity.*;
-
 @Entity
 public class Recurso implements Serializable {
 	private static final long serialVersionUID = 1L;

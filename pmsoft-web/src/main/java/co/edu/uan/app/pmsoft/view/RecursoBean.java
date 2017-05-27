@@ -35,7 +35,7 @@ public class RecursoBean implements Serializable {
 	public static final String PAGE_NAME = "gestionar_recursos";
 	private static final Logger logger = LoggerFactory.getLogger(RecursoBean.class);
 	
-	@EJB 
+	@EJB
 	RecursoService recursoService;
 	
 	@EJB
@@ -111,9 +111,7 @@ public class RecursoBean implements Serializable {
         
 		if (validateSaveAction(event)) {
 			try {				
-				logger.info("TIPOR: " + this.recurso.getTipoRecurso().getId());
 				this.recurso.setTipoRecurso(tipoRecursoService.getById(this.recurso.getTipoRecurso().getId()));
-				logger.info("TIPO RECURSO: " + this.recurso.getTipoRecurso().getNombre());
 				recursoService.save(this.recurso);
 				this.getRecursoAll();
 				this.closedPopup();
