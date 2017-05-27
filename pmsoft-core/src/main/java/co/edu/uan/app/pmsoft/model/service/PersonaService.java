@@ -10,6 +10,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import co.edu.uan.app.pmsoft.model.entity.Persona;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 
+
+
 @Remote
 @Stateless
 public class PersonaService {
