@@ -1,20 +1,19 @@
-﻿-- Table: public.version
-
--- DROP TABLE public.version;
-
-CREATE TABLE public.documento (
-	documento_id bigint NOT NULL,
-	documento_ruta character varying(255) NOT NULL,
-	documento_nombre character varying(255) NOT NULL,
-	documento_actividad bigint NOT NULL,
-	documento_fechacreacion timestamp without time zone NOT NULL,
-	documento_fechaultimocambio timestamp without time zone NOT NULL,
-	documento_usuariocreacion character varying(255) NOT NULL,
-	documento_usuarioultimocambio character varying(255) NOT NULL,
-	CONSTRAINT documento_pkey PRIMARY KEY (documento_id)
+﻿CREATE TABLE public.personarecurso
+(
+  persona_recurso_id bigint NOT NULL,
+  persona_recurso_editable boolean,
+  persona_recurso_estado integer,
+  persona_recurso_fechacreacion timestamp without time zone,
+  persona_recurso_fechaultimocambio timestamp without time zone,
+  persona bytea,
+  persona_recurso_recurso character varying(255) NOT NULL,
+  persona_recurso_usuariocreacion character varying(255),
+  persona_recurso_usuarioultimocambio character varying(255),
+  personarecurso_version integer,
+  CONSTRAINT personarecurso_pkey PRIMARY KEY (persona_recurso_id)
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.tiporecurso
+ALTER TABLE public.personarecurso
   OWNER TO postgres;
