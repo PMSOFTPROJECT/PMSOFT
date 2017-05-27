@@ -160,9 +160,17 @@
 							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
 						</ace:textEntry>
 						
-						<ace:textEntry id="dialogTipoDocumentoPersona" value="#{personaBean.tipoDocumentoPersona}"
-							label="Tipo de documento: " labelPosition="left" required="false"
-							requiredIndicator="(*)" readonly="#{personaBean.visibleEdit}" rendered="#{!personaBean.visibleDelete}">
+						<ace:comboBox id="combo"
+	                    			value="#{personaBean.persona.tipoDocumento.id}"
+									label="Tipo de documento: " 
+									labelPosition="left"
+									rendered="#{!personaBean.ver}">
+							<f:selectItems value="#{personaBean.listSelectItem}"/>
+						</ace:comboBox>
+						
+						<ace:textEntry id="dialogTipoDocumento" value="#{personaBean.persona.tipoDocumento.nombre}"
+							label="Tipo Documento: " labelPosition="left" required="false"
+							requiredIndicator="(*)" rendered="#{personaBean.ver}" disabled="#{personaBean.ver}">
 						</ace:textEntry>
 						
 						<ace:textEntry id="dialogIdentificacionPersona" value="#{personaBean.identificacionPersona}"

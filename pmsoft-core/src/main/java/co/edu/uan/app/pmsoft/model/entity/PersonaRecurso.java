@@ -5,9 +5,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
 @Entity
@@ -17,13 +20,17 @@ public class PersonaRecurso implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "persona_recurso_id", updatable = false, nullable = false)
-	private Long id;	
+	private Long id;
 	
-	@Column(name = "persona_recurso_persona", nullable = false)
-	private String persona;
+	@JoinColumn(name = "persona_recurso_persona_id", referencedColumnName = "persona_id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Persona persona;
 	
-	@Column(name = "persona_recurso_recurso", nullable = false)
-	private String recurso;
+	@JoinColumn(name = "persona_recurso_recurso_id", referencedColumnName = "recurso_id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Recurso recurso;
+	
+	
 	
 	@Column(name = "persona_recurso_estado", nullable = true)
 	private Integer estado;
@@ -63,19 +70,19 @@ public class PersonaRecurso implements Serializable{
 		this.id = id;
 	}
 
-	public String getPersona() {
+	public Persona getPersona() {
 		return persona;
 	}
 
-	public void setPersona(String persona) {
+	public void setPersona(Persona persona) {
 		this.persona = persona;
 	}
 
-	public String getRecurso() {
+	public Recurso getRecurso() {
 		return recurso;
 	}
 
-	public void setRecurso(String recurso) {
+	public void setRecurso(Recurso recurso) {
 		this.recurso = recurso;
 	}
 

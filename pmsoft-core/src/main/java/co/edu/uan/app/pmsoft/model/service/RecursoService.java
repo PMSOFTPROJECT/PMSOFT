@@ -6,6 +6,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
+
+import co.edu.uan.app.pmsoft.model.entity.Persona;
 import co.edu.uan.app.pmsoft.model.entity.Recurso;
 import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 
@@ -22,6 +24,14 @@ public class RecursoService {
 		List<Recurso> lista = this.em.createQuery(criteria.select(criteria.from(Recurso.class))).getResultList();
 				
 		return lista;
+	}
+	
+	public Recurso getById(long id) throws Exception {
+		
+		Recurso recurso = null;
+		recurso = this.em.find(Recurso.class, id);
+		
+		return recurso;
 	}
 	
 	public Recurso save(Recurso recurso) {

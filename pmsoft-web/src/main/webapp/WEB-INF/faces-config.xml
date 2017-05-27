@@ -52,11 +52,11 @@
 			<navigation-case>
 				<from-action>gestionar_documentos</from-action>
 				<to-view-id>/faces/pages/gestionar_documentos.xhtml</to-view-id>
-			</navigation-case>			
-		</navigation-rule>
-		<navigation-case>
+			</navigation-case>		
+			<navigation-case>
 				<from-action>gestionar_persona_recurso</from-action>
 				<to-view-id>/faces/pages/gestionar_persona_recurso.xhtml</to-view-id>
+			</navigation-case>	
 		</navigation-rule>
 
 	</application>

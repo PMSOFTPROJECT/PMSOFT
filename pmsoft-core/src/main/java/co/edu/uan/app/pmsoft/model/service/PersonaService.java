@@ -28,11 +28,9 @@ public class PersonaService {
 	}
 
 	public Persona getById(long id) throws Exception {
-		Persona persona = this.em.find(Persona.class, id);
 		
-		if (persona == null) {
-			throw new Exception("No hay objeto con ese id");
-		}
+		Persona persona = null;
+		persona = this.em.find(Persona.class, id);
 		
 		return persona;
 	}

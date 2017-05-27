@@ -5,9 +5,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Persona implements Serializable {
@@ -39,8 +42,9 @@ public class Persona implements Serializable {
 	@Column(name = "persona_email", nullable = false)
 	private String email;
 	
-	@Column(name = "persona_tipodocumento", nullable = false)
-	private String tipoDocumento;
+	@JoinColumn(name = "persona_tipodocumento_id", referencedColumnName = "t_documento_id")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private TipoDocumento tipoDocumento;
 	
 	@Column(name = "persona_identificacion", nullable = false)
 	private String identificacion;
@@ -69,30 +73,18 @@ public class Persona implements Serializable {
 	@Column(name = "persona_editable", nullable = false)
 	private Boolean editable;
 
-	/**
-	 * @return the id
-	 */
 	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the nombre
-	 */
 	public String getNombre() {
 		return nombre;
 	}
-
-	/**
-	 * @param nombre the nombre to set
-	 */
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -137,11 +129,11 @@ public class Persona implements Serializable {
 		this.email = email;
 	}
 
-	public String getTipoDocumento() {
+	public TipoDocumento getTipoDocumento() {
 		return tipoDocumento;
 	}
 
-	public void setTipoDocumento(String tipoDocumento) {
+	public void setTipoDocumento(TipoDocumento tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}	
 
@@ -209,16 +201,10 @@ public class Persona implements Serializable {
 		this.estado = estado;
 	}
 
-	/**
-	 * @return the editable
-	 */
 	public Boolean getEditable() {
 		return editable;
 	}
 
-	/**
-	 * @param editable the editable to set
-	 */
 	public void setEditable(Boolean editable) {
 		this.editable = editable;
 	}		

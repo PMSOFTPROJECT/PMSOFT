@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 
 import co.edu.uan.app.pmsoft.model.entity.Documento;
+import co.edu.uan.app.pmsoft.model.pojo.Constantes;
 
 @Remote
 @Stateless
