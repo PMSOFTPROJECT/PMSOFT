@@ -41,10 +41,10 @@ public class PersonaRecursoBean implements Serializable {
 
 	@EJB
 	PersonaRecursoService personaRecursoService;
-	
+
 	@EJB
 	PersonaService personaService;
-	
+
 	@EJB
 	RecursoService recursoService;
 
@@ -77,7 +77,7 @@ public class PersonaRecursoBean implements Serializable {
 		this.ver = false;
 		this.listaPersona = null;
 		this.listaRecurso = null;
-		
+
 		this.personaRecurso = new PersonaRecurso();
 		this.personaRecurso.setPersona(new Persona());
 		this.personaRecurso.setRecurso(new Recurso());
@@ -86,7 +86,7 @@ public class PersonaRecursoBean implements Serializable {
 		this.personaRecurso.setFechaCreacion(new Date());
 		this.personaRecurso.setFechaUltimoCambio(new Date());
 		this.personaRecurso.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
-		this.personaRecurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());	
+		this.personaRecurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
 		this.personaRecurso.setVersion(1);
 	}
 
@@ -97,12 +97,12 @@ public class PersonaRecursoBean implements Serializable {
 	private void closedPopup() {
 		this.visiblePopup = false;
 	}
-	
+
 	public List<Persona> getPersonaAll() {
 		this.listaPersona = personaService.getAll();
 		return this.listaPersona;
 	}
-	
+
 	public List<Recurso> getRecursoAll() {
 		this.listaRecurso = recursoService.getAll();
 		return this.listaRecurso;
@@ -115,7 +115,7 @@ public class PersonaRecursoBean implements Serializable {
 
 	public void agregarPersonaRecurso(ActionEvent event) {
 		logger.info("Entro a addPersonaRecurso(event:" + event + ")");
-		
+
 		this.personaRecurso = new PersonaRecurso();
 		this.personaRecurso.setPersona(new Persona());
 		this.personaRecurso.setRecurso(new Recurso());
@@ -124,7 +124,7 @@ public class PersonaRecursoBean implements Serializable {
 		this.personaRecurso.setFechaCreacion(new Date());
 		this.personaRecurso.setFechaUltimoCambio(new Date());
 		this.personaRecurso.setUsuarioCreacion(this.getSessionBean().getNombreCompletoUsuario());
-		this.personaRecurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());	
+		this.personaRecurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
 		this.personaRecurso.setVersion(1);
 		this.ver = false;
 
@@ -139,15 +139,16 @@ public class PersonaRecursoBean implements Serializable {
 
 	public String saveAction(ActionEvent event) {
 		logger.info("Entró a saveAction(ActionEvent event)");
-        
+
 		if (validateSaveAction(event)) {
 			try {
 				personaRecursoService.save(this.personaRecurso);
 				this.getPersonaRecursoAll();
+				FacesUtils.addMessageError(event, "Guardado con éxito", "");
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Guardar PersonaRecurso", "Error al guardar el PersonaRecurso", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al guardar el PersonaRecurso", e.getMessage());
 				logger.error("Error al guardar PersonaRecurso. "+e.getMessage());
 			}
 		}
@@ -158,38 +159,25 @@ public class PersonaRecursoBean implements Serializable {
 
 	private boolean validateSaveAction(ActionEvent event) {
 		logger.info("Entró a validateSaveAction()");
-		
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-        
-        // remove existing messages
-        Iterator<FacesMessage> i = facesContext.getMessages();
-        while (i.hasNext()) {
-            i.next();
-            i.remove();
-        }
-		
+
 		boolean valid = true;
 		String detail = "";
 
 		if (this.personaRecurso == null) {
-			detail = "No existe un objeto PersonaRecurso inicializado";
+			FacesUtils.addMessageError(event, "No existe un objeto PersonaRecurso inicializado", "");
 			valid = false;
 
-		} else if (this.personaRecurso.getPersona() == null || this.personaRecurso.getPersona().getId() == null) {
-			detail = "Se debe ingresar la persona";	
+		} if (this.personaRecurso.getPersona() == null || this.personaRecurso.getPersona().getId() == null) {
+			FacesUtils.addMessageError(event, "Se debe ingresar la persona", "");
 			valid = false;
-		} else if (this.personaRecurso.getRecurso() == null || this.personaRecurso.getRecurso().getId() == null) {
-			detail = "Se debe ingresar el recurso";	
+		} if (this.personaRecurso.getRecurso() == null || this.personaRecurso.getRecurso().getId() == null) {
+			FacesUtils.addMessageError(event, "Se debe ingresar el recurso", "");
 			valid = false;
-		} 	
+		}
 
-		if (!valid) {			
-			FacesUtils.addMessageError("Guardar PersonaRecurso", "Error al guardar el PersonaRecurso", detail);
+		if (!valid) {
+			FacesUtils.addMessageError(event, "Error al guardar el PersonaRecurso", detail);
 			logger.error("Error validando el PersonaRecurso a guardar. "+detail);
-			
-			UIComponent component = event.getComponent();
-	        FacesMessage facesMessage = new FacesMessage((FacesMessage.Severity) FacesMessage.VALUES.get(2), detail, detail);
-	        facesContext.addMessage(component.getClientId(), facesMessage);
 		}
 		logger.info("Saliendo de validateSaveAction()");
 		return valid;
@@ -204,13 +192,13 @@ public class PersonaRecursoBean implements Serializable {
         }
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            
+
             if (tmpRowData instanceof Documento) {
             	this.personaRecurso = (PersonaRecurso) tmpRowData;
             	this.personaRecurso.setFechaUltimoCambio(new Date());
             	this.personaRecurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
-            
+
         }
 
 		this.headerDialog = "Editar PersonaRecurso";
@@ -236,7 +224,7 @@ public class PersonaRecursoBean implements Serializable {
             	this.personaRecurso = (PersonaRecurso) tmpRowData;
             }
         }
-        
+
         this.ver = true;
         this.visibleEdit = true;
         this.visibleView = false;
@@ -251,7 +239,7 @@ public class PersonaRecursoBean implements Serializable {
 	public void popupClose() {
 		this.visiblePopup = false;
 	}
-	
+
 	public void eliminarPersonaRecurso(ActionEvent event) {
 		logger.info("Entro a deletePersonaRecurso(event:" + event + ")");
 
@@ -267,9 +255,9 @@ public class PersonaRecursoBean implements Serializable {
             	this.personaRecurso.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
         }
-        
+
         this.closedPopup();
-        
+
 		logger.info("Saliendo de deletePersonaRecurso(PersonaRecurso:" + personaRecurso + ")");
 
 	}
@@ -283,7 +271,7 @@ public class PersonaRecursoBean implements Serializable {
 			this.closedPopup();
 
 		} catch (Exception e) {
-			FacesUtils.addMessageError("Eliminar PersonaRecurso", "Error al eliminar el PersonaRecurso", e.getMessage());
+			FacesUtils.addMessageError(event, "Error al eliminar el PersonaRecurso", e.getMessage());
 			logger.error("Error al eliminar PersonaRecurso. "+e.getMessage());
 		}
 
@@ -302,7 +290,7 @@ public class PersonaRecursoBean implements Serializable {
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Ver PersonaRecurso", "Error al ver el PersonaRecurso", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al ver el PersonaRecurso", e.getMessage());
 				logger.error("Error al ver PersonaRecurso. "+e.getMessage());
 			}
 		}
@@ -310,10 +298,10 @@ public class PersonaRecursoBean implements Serializable {
 		logger.info("Saliendo de viewAction()");
 		return PAGE_NAME;
 	}
-	
+
 
 	public List<SelectItem> getListSelectItemPersona(){
-		
+
 		this.getPersonaAll();
 
 		this.listSelectItemPersona = new ArrayList<SelectItem>();
@@ -326,9 +314,9 @@ public class PersonaRecursoBean implements Serializable {
 
 		return listSelectItemPersona;
 	}
-	
+
 public List<SelectItem> getListSelectItemRecurso(){
-		
+
 		this.getRecursoAll();
 
 		this.listSelectItemRecurso = new ArrayList<SelectItem>();
@@ -350,7 +338,7 @@ public List<SelectItem> getListSelectItemRecurso(){
 		logger.info("Saliendo de cancelAction()");
 		return PAGE_NAME;
 	}
-	
+
 	public boolean isVer() {
 		return ver;
 	}
@@ -365,7 +353,7 @@ public List<SelectItem> getListSelectItemRecurso(){
 
 	public void setHeaderDialog(String headerDialog) {
 		this.headerDialog = headerDialog;
-	}	
+	}
 
 	public PersonaRecurso getPersonaRecurso() {
 
@@ -379,7 +367,7 @@ public List<SelectItem> getListSelectItemRecurso(){
 	public void setPersonaRecurso(PersonaRecurso perRec) {
 		this.personaRecurso = perRec;
 	}
-	
+
 	public Date getFechaCreacionPersonaRecurso() {
 		Date fechaCreacion = null;
 		if(this.personaRecurso != null){
@@ -439,7 +427,7 @@ public List<SelectItem> getListSelectItemRecurso(){
 			this.personaRecurso.setUsuarioUltimoCambio(usuarioUltimoCambio);
 		}
 	}
-	
+
 	public Integer getEstadoPersonaRecurso() {
 		Integer estado = null;
 		if(this.personaRecurso != null){
@@ -453,7 +441,7 @@ public List<SelectItem> getListSelectItemRecurso(){
 		if(this.personaRecurso != null){
 			this.personaRecurso.setEstado(estado);
 		}
-	}	
+	}
 
 	public boolean isVisiblePopup() {
 		return visiblePopup;
@@ -462,7 +450,7 @@ public List<SelectItem> getListSelectItemRecurso(){
 	public void setVisiblePopup(boolean visiblePopup) {
 		this.visiblePopup = visiblePopup;
 	}
-	
+
     public void closeFAjax(AjaxBehaviorEvent event){
         this.visiblePopup = false;
         this.visibleEdit = false;
@@ -499,12 +487,12 @@ public List<SelectItem> getListSelectItemRecurso(){
 	public void setVisibleView(boolean visibleView) {
 		this.visibleView = visibleView;
 	}
-	
+
 	public boolean isVisibleDelete() {
 		return visibleDelete;
 	}
 
 	public void setVisibleDelete(boolean visibleDelete) {
 		this.visibleDelete = visibleDelete;
-	}	
+	}
 }

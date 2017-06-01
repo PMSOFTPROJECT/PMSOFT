@@ -30,7 +30,7 @@ public class UsuarioBean   implements Serializable{
 	public static final String BEAN_NAME = "usuarioBean";
 	public static final String PAGE_NAME = "gestionar_usuarios";
 	private static final Logger logger = LoggerFactory.getLogger(UsuarioBean.class);
-	
+
 
 	@EJB
 	UsuarioService usuarioService;
@@ -39,8 +39,8 @@ public class UsuarioBean   implements Serializable{
 	private boolean visiblePopup;
 
 	private String headerDialog;
-	
-	
+
+
 	@PostConstruct
 	public void init() {
 		this.listUsuario = null;
@@ -48,23 +48,23 @@ public class UsuarioBean   implements Serializable{
 		this.visiblePopup = false;
 		this.headerDialog = "";
 	}
-	
+
 	private void openPopup() {
 		this.visiblePopup = true;
 	}
-	
+
 	private void closedPopup() {
 		this.visiblePopup = false;
 	}
-	
-	
+
+
 	public List<Usuario> getUsuarioAll() {
 		this.listUsuario = usuarioService.getAll();
 		return this.listUsuario;
 	}
-	
-	
-	
+
+
+
 
 	public void addUsuario(ActionEvent event) {
 		logger.info("Entro a addUsuario(event:" + event + ")");
@@ -84,21 +84,22 @@ public class UsuarioBean   implements Serializable{
 		logger.info("Saliendo de addUsuario(usuario:" + usuario + ")");
 
 	}
-	
-	
-	
-	public String saveAction() {
+
+
+
+	public String saveAction(ActionEvent event) {
 		logger.info("Entró a saveAction(ActionEvent event)");
 
-		if (validateSaveAction()) {
+		if (validateSaveAction(event)) {
 
 			try {
 				usuarioService.save(this.usuario);
 				this.getUsuarioAll();
+				FacesUtils.addMessageInfo(event, "Almacenado con éxito","");
 				this.closedPopup();
-				
+
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Guardar Usuario", "Error al guardar el Usuario", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al guardar el Usuario", e.getMessage());
 				logger.error("Error al guardar Usuario. "+e.getMessage());
 			}
 		}
@@ -106,34 +107,35 @@ public class UsuarioBean   implements Serializable{
 		logger.info("Saliendo de saveAction()");
 		return PAGE_NAME;
 	}
-	
-	
-	
-	
-	private boolean validateSaveAction() {
+
+
+
+
+	private boolean validateSaveAction(ActionEvent event) {
 		logger.info("Entró a validateSaveAction()");
 
 		boolean valid = true;
 		String detail = "";
 
 		if (this.usuario == null) {
-			detail = "No existe un objeto USUARIO inicializado";
+			 FacesUtils.addMessageError(event, "No existe un objeto USUARIO inicializado","");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(this.usuario.getNombre())) {
-			detail = "Se debe ingresar el nombre del usuario";
+
+		}
+		 if (StringUtils.isBlank(this.usuario.getNombre())) {
+			 FacesUtils.addMessageError(event, "Se debe ingresar el nombre del usuario","");
 			valid = false;
 		}
 
 		if (!valid) {
-			FacesUtils.addMessageError("Guardar Usuario", "Error al guardar el Usuario", detail);
+			FacesUtils.addMessageError(event, "Error al guardar el Usuario", detail);
 			logger.error("Error validando el usuario a guardar. "+detail);
 		}
 
 		logger.info("Saliendo de validateSaveAction()");
 		return valid;
 	}
-	
+
 	public String getHeaderDialog() {
 		return this.headerDialog;
 	}
@@ -141,9 +143,9 @@ public class UsuarioBean   implements Serializable{
 	public void setHeaderDialog(String headerDialog) {
 		this.headerDialog = headerDialog;
 	}
-	
-	
-	
+
+
+
 	public Usuario getUsuario() {
 
 		logger.info("this.usuario = " + this.usuario);
@@ -157,7 +159,7 @@ public class UsuarioBean   implements Serializable{
 		this.usuario = usuario;
 	}
 
-	
+
 	public boolean isVisiblePopup() {
 		return visiblePopup;
 	}
@@ -165,158 +167,157 @@ public class UsuarioBean   implements Serializable{
 	public void setVisiblePopup(boolean visiblePopup) {
 		this.visiblePopup = visiblePopup;
 	}
-	
-	
+
+
 	public void setPkUsuario(long id){
 		if(this.usuario != null){
 			this.usuario.setId(id);
 		}
 	}
-	
+
 	public long getPkUsuario(){
 		long nombre = 0;
 		if(this.usuario != null){
 			nombre = this.usuario.getId();
 		}
-		
+
 		return nombre;
 	}
-	
-	
+
+
 	public void setNombreUsuario(String nombre){
 		if(this.usuario != null){
 			this.usuario.setNombre(nombre);
 		}
 	}
-	
+
 	public String getNombreUsuario(){
 		String nombre = "";
 		if(this.usuario != null){
 			nombre = this.usuario.getNombre();
 		}
-		
+
 		return nombre;
 	}
-	
-	
+
+
 	public void setApellidoUsuario(String apellido){
 		if(this.usuario != null){
 			this.usuario.setApellido(apellido);
 		}
 	}
-	
+
 	public String getApellidoUsuario(){
 		String apellido = "";
 		if(this.usuario != null){
 			apellido = this.usuario.getApellido();
 		}
-		
+
 		return apellido;
 	}
-	
+
 	public void setIdentificacionUsuario(String identificacion){
 		if(this.usuario != null){
 			this.usuario.setIdentificacion(identificacion);
 		}
 	}
-	
+
 	public String getIdentificacionUsuario(){
 		String identificacion = "";
 		if(this.usuario != null){
 			identificacion = this.usuario.getIdentificacion();
 		}
-		
+
 		return identificacion;
 	}
-	
-	
+
+
 	public void setCorreoUsuario(String correo){
 		if(this.usuario != null){
 			this.usuario.setCorreo(correo);
 		}
 	}
-	
+
 	public String getCorreoUsuario(){
 		String correo = "";
 		if(this.usuario != null){
 			correo = this.usuario.getCorreo();
 		}
-		
+
 		return correo;
 	}
-	
-	
+
+
 	public void setDireccionUsuario(String direccion){
 		if(this.usuario != null){
 			this.usuario.setDireccion(direccion);
 		}
 	}
-	
+
 	public String getDireccionUsuario(){
 		String direccion = "";
 		if(this.usuario != null){
 			direccion = this.usuario.getDireccion();
 		}
-		
+
 		return direccion;
 	}
-	
-	
+
+
 	public void setEstadoUsuario(int estado){
 		if(this.usuario != null){
 			this.usuario.setEstado(estado);
 		}
 	}
-	
+
 	public int getEstadoUsuario(){
 		int estado = 0;
 		if(this.usuario != null){
 			estado = this.usuario.getEstado();
 		}
-		
+
 		return estado;
 	}
-	
-	
+
+
 	public void setUserUsuario(String usuario){
 		if(this.usuario != null){
 			this.usuario.setUsuario(usuario);
 		}
 	}
-	
+
 	public String getUserUsuario(){
 		String estado = "";
 		if(this.usuario != null){
 			estado = this.usuario.getUsuario();
 		}
-		
+
 		return estado;
 	}
-	
-	
-	
+
+
+
 	public void setContrasenaUsuario(String clave){
 		if(this.usuario != null){
 			this.usuario.setClave(clave);
 		}
 	}
-	
+
 	public String getContrasenaUsuario(){
 		String clave = "";
 		if(this.usuario != null){
 			clave = this.usuario.getClave();
 		}
-		
+
 		return clave;
 	}
-	
-	
-	
-	
+
+
+
+
 	public void closeFAjax(AjaxBehaviorEvent event){
         this.visiblePopup=false;
     }
 
 
 }
-

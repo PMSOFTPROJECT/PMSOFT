@@ -108,15 +108,16 @@ public class ProyectoBean implements Serializable {
 
 	public String saveAction(ActionEvent event) {
 		logger.info("Entró a saveAction(ActionEvent event)");
-        
+
 		if (validateSaveAction(event)) {
 			try {
 				proyectoService.save(this.proyecto);
 				this.getProjectAll();
+				FacesUtils.addMessageInfo(event, "Proyecto guardado con exito","");
 				this.closedPopup();
-
+				
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Guardar Proyecto", "Error al guardar el Proyecto", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al guardar el Proyecto", e.getMessage());
 				logger.error("Error al guardar proyecto. "+e.getMessage());
 			}
 		}
@@ -127,56 +128,52 @@ public class ProyectoBean implements Serializable {
 
 	private boolean validateSaveAction(ActionEvent event) {
 		logger.info("Entró a validateSaveAction()");
-		
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-        
-        // remove existing messages
-        Iterator<FacesMessage> i = facesContext.getMessages();
-        while (i.hasNext()) {
-            i.next();
-            i.remove();
-        }
-		
+
 		boolean valid = true;
 		String detail = "";
 
 		if (this.proyecto == null) {
-			detail = "No existe un objeto PROYECTO inicializado";
+			detail = "";
+			FacesUtils.addMessageError(event,"No existe un objeto PROYECTO inicializado" ,"No existe un objeto PROYECTO inicializado");
 			valid = false;
 
 		} else if (StringUtils.isBlank(this.proyecto.getNombre())) {
-			detail = "Se debe ingresar el nombre del proyecto";	
+			FacesUtils.addMessageError(event, "Se debe ingresar el nombre del proyecto","");
 			valid = false;
-			
-		} else if (proyecto.getFechaInicio() == null) {
-			detail = "Se debe ingresar una fecha de inicio";
+		} 
+		
+		if (proyecto.getFechaInicio() == null || proyecto.getFechaFin() == null) {
+			if(proyecto.getFechaInicio() == null){
+				FacesUtils.addMessageError(event,"Se debe ingresar una fecha de inicio" ,"");
+				valid = false;
+			}
+			if (proyecto.getFechaFin() == null){
+				FacesUtils.addMessageError(event,"Se debe ingresar una fecha de fin" ,"");
+				valid = false;
+			}
+
+		}else if (proyecto.getFechaInicio().compareTo(proyecto.getFechaFin()) > 0) {
+			FacesUtils.addMessageError(event,"La fecha fin no puede ser menor a la fecha inicio" ,"");
 			valid = false;
-			
-		} else if (proyecto.getFechaFin() == null) {
-			detail = "Se debe ingresar una fecha de fin";
+
+		} 
+		
+		if (StringUtils.isBlank(proyecto.getObjeto())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar el objeto del proyecto","");
 			valid = false;
-			
-		} else if (proyecto.getFechaInicio().compareTo(proyecto.getFechaFin()) > 0) {
-			detail = "La fecha fin no puede ser menor a la fecha inicio";
+
+		} 
+		
+		if (StringUtils.isBlank(proyecto.getPersonaResponsable())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar la persona responsable del proyecto","");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(proyecto.getObjeto())) {
-			detail = "Se debe ingresar el objeto del proyecto";
-			valid = false;
-			
-		} else if (StringUtils.isBlank(proyecto.getPersonaResponsable())) {
-			detail = "Se debe ingresar la persona responsable del proyecto";
-			valid = false;
-			
+
 		}
 
-		if (!valid) {			
-			FacesUtils.addMessageError("Guardar Proyecto", "Error al guardar el Proyecto", detail);
+		if (!valid) {
+			FacesUtils.addMessageError(event, "Error al guardar el Proyecto", detail);
 			logger.error("Error validando el proyecto a guardar. "+detail);
 			
-			UIComponent component = event.getComponent();
-	        FacesMessage facesMessage = new FacesMessage((FacesMessage.Severity) FacesMessage.VALUES.get(2), detail, detail);
-	        facesContext.addMessage(component.getClientId(), facesMessage);
 		}
 		logger.info("Saliendo de validateSaveAction()");
 		return valid;
@@ -191,13 +188,13 @@ public class ProyectoBean implements Serializable {
         }
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            
+
             if (tmpRowData instanceof Proyecto) {
             	this.proyecto = (Proyecto) tmpRowData;
             	this.proyecto.setFechaUltimoCambio(new Date());
             	this.proyecto.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
-            
+
         }
 
 		this.headerDialog = "Editar Proyecto";
@@ -237,7 +234,7 @@ public class ProyectoBean implements Serializable {
 	public void popupClose() {
 		this.visiblePopup = false;
 	}
-	
+
 	public void eliminarProyecto(ActionEvent event) {
 		logger.info("Entro a deleteProject(event:" + event + ")");
 
@@ -253,9 +250,9 @@ public class ProyectoBean implements Serializable {
             	this.proyecto.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
         }
-        
+
         this.closedPopup();
-        
+
 		logger.info("Saliendo de deleteProject(project:" + proyecto + ")");
 
 	}
@@ -269,7 +266,7 @@ public class ProyectoBean implements Serializable {
 			this.closedPopup();
 
 		} catch (Exception e) {
-			FacesUtils.addMessageError("Eliminar Proyecto", "Error al eliminar el Proyecto", e.getMessage());
+			FacesUtils.addMessageError(event, "Error al eliminar el Proyecto", e.getMessage());
 			logger.error("Error al eliminar proyecto. "+e.getMessage());
 		}
 
@@ -288,7 +285,7 @@ public class ProyectoBean implements Serializable {
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Ver Proyecto", "Error al ver el Proyecto", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al ver el Proyecto", e.getMessage());
 				logger.error("Error al ver proyecto. "+e.getMessage());
 			}
 		}
@@ -296,7 +293,7 @@ public class ProyectoBean implements Serializable {
 		logger.info("Saliendo de viewAction()");
 		return PAGE_NAME;
 	}
-	
+
 
 	public List<SelectItem> getListSelectItem(){
 
@@ -555,7 +552,7 @@ public class ProyectoBean implements Serializable {
 	public void setVisibleView(boolean visibleView) {
 		this.visibleView = visibleView;
 	}
-	
+
 	public boolean isVisibleDelete() {
 		return visibleDelete;
 	}
@@ -579,5 +576,5 @@ public class ProyectoBean implements Serializable {
 	public void setPopupDateFechaFin(boolean popupDateFechaFin) {
 		this.popupDateFechaFin = popupDateFechaFin;
 	}
-	
+
 }

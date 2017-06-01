@@ -103,20 +103,21 @@ public class TipoDocumentoBean implements Serializable {
 
 	public String saveAction(ActionEvent event) {
 		logger.info("Entró a saveAction(ActionEvent event)");
-        
+
 		if (validateSaveAction(event)) {
 			try {
-				
+
 				if(tipoDocumentoService.findDocumento(getNombreTipoDocumento()) == true){
 				tipoDocumentoService.save(this.tipoDocumento);
 				this.getTipoDocumentoAll();
+				FacesUtils.addMessageInfo(event, "Almacenado con éxito","");
 				this.closedPopup();}
 				else{
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "El tipo de documento ya fue agregado", ""));
+					FacesUtils.addMessageWarn(event, "El tipo de documento ya fue agregado", "");
 				}
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Guardar tipo de documento", "Error al guardar el tipo de documento", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al guardar el tipo de documento", e.getMessage());
 				logger.error("Error al guardar tipo de documento. "+e.getMessage());
 			}
 		}
@@ -127,36 +128,22 @@ public class TipoDocumentoBean implements Serializable {
 
 	private boolean validateSaveAction(ActionEvent event) {
 		logger.info("Entró a validateSaveAction()");
-		
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-        
-        // remove existing messages
-        Iterator<FacesMessage> i = facesContext.getMessages();
-        while (i.hasNext()) {
-            i.next();
-            i.remove();
-        }
-		
+
 		boolean valid = true;
 		String detail = "";
 
 		if (this.tipoDocumento == null) {
-			detail = "No existe un objeto tipo de documento inicializado";
-			valid = false;
+			 FacesUtils.addMessageError(event, "No existe un objeto tipo de documento inicializado","");
+			 valid = false;
+		} if (StringUtils.isBlank(this.tipoDocumento.getNombre())) {
+			 FacesUtils.addMessageError(event, "Se debe ingresar el nombre del tipo de documento","");
+			 valid = false;
+		}
 
-		} else if (StringUtils.isBlank(this.tipoDocumento.getNombre())) {
-			detail = "Se debe ingresar el nombre del tipo de documento";	
-			valid = false;
-			
-		} 
-
-		if (!valid) {			
-			FacesUtils.addMessageError("Guardar tipo de documento", "Error al guardar el tipo de documento", detail);
+		if (!valid) {
+			FacesUtils.addMessageError(event, "Error al guardar el tipo de documento", detail);
 			logger.error("Error validando el tipo de documento a guardar. "+detail);
-			
-			UIComponent component = event.getComponent();
-	        FacesMessage facesMessage = new FacesMessage((FacesMessage.Severity) FacesMessage.VALUES.get(2), detail, detail);
-	        facesContext.addMessage(component.getClientId(), facesMessage);
+
 		}
 		logger.info("Saliendo de validateSaveAction()");
 		return valid;
@@ -171,13 +158,13 @@ public class TipoDocumentoBean implements Serializable {
         }
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            
+
             if (tmpRowData instanceof TipoDocumento) {
             	this.tipoDocumento = (TipoDocumento) tmpRowData;
             	this.tipoDocumento.setFechaUltimoCambio(new Date());
             	this.tipoDocumento.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
-            
+
         }
 
 		this.headerDialog = "Editar tipo de documento";
@@ -231,7 +218,7 @@ public class TipoDocumentoBean implements Serializable {
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Ver tipo de Documento", "Error al ver el tipo de Documento", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al ver el tipo de Documento", e.getMessage());
 				logger.error("Error al ver tipo de Documento. "+e.getMessage());
 			}
 		}
@@ -315,7 +302,7 @@ public class TipoDocumentoBean implements Serializable {
         this.visibleEdit = false;
     }
 
-  
+
 
 
 	public void setEstadoTipoDocumento(Integer estado) {
@@ -427,7 +414,7 @@ public class TipoDocumentoBean implements Serializable {
 	public void setVisibleView(boolean visibleView) {
 		this.visibleView = visibleView;
 	}
-	
+
 	public boolean isVisibleDelete() {
 		return visibleDelete;
 	}
@@ -451,5 +438,5 @@ public class TipoDocumentoBean implements Serializable {
 	public void setPopupDateFechaFin(boolean popupDateFechaFin) {
 		this.popupDateFechaFin = popupDateFechaFin;
 	}
-	
+
 }

@@ -92,7 +92,7 @@ public class RolBean implements Serializable {
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Guardar Rol", "Error al guardar el Rol", e.getMessage());
+				FacesUtils.addMessageError(null, "Error al guardar el Rol", e.getMessage());
 				logger.error("Error al guardar rol. "+e.getMessage());
 			}
 		}
@@ -120,7 +120,7 @@ public class RolBean implements Serializable {
 
 		if (!valid) {
 			
-			FacesUtils.addMessageError("Guardar Rol", "Error al guardar el Rol", detail);
+			FacesUtils.addMessageError(null, "Error al guardar el Rol", detail);
 			logger.error("Error validando el rol a guardar. "+detail);
 		}
 

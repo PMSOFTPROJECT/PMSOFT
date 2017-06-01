@@ -5,7 +5,8 @@ import java.util.Iterator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-
+import javax.faces.component.UIComponent;
+import javax.faces.event.ActionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,31 +19,29 @@ public class FacesUtils {
 		return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
 	}
 
-	public static void addMessageInfo(String clientId, String summary, String detail) {
-		addMessage(0, clientId, summary, detail);
+	public static void addMessageInfo(ActionEvent event, String summary, String detail) {
+		addMessage(0, event, summary, detail);
 	}
 
-	public static void addMessageWarn(String clientId, String summary, String detail) {
-		addMessage(1, clientId, summary, detail);
+	public static void addMessageWarn(ActionEvent event, String summary, String detail) {
+		addMessage(1, event, summary, detail);
 	}
 
-	public static void addMessageError(String clientId, String summary, String detail) {
-		addMessage(2, clientId, summary, detail);
-	}
-	
-	public static void addMessageFatal(String clientId, String summary, String detail) {
-		addMessage(3, clientId, summary, detail);
+	public static void addMessageError(ActionEvent event, String summary, String detail) {
+		addMessage(2, event, summary, detail);
 	}
 
-	private static void addMessage(int index, String clientId, String summary, String detail){
+	public static void addMessageFatal(ActionEvent event, String summary, String detail) {
+		addMessage(3, event, summary, detail);
+	}
+
+	private static void addMessage(int index, ActionEvent event, String summary, String detail){
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		removeExistingMessages(facesContext);
-
-		FacesMessage facesMessage = new FacesMessage((FacesMessage.Severity) FacesMessage.VALUES.get(index), summary,
-				detail);
-		facesContext.addMessage(clientId, facesMessage);
+		UIComponent component = event.getComponent();
+		FacesMessage facesMessage = new FacesMessage((FacesMessage.Severity) FacesMessage.VALUES.get(index), summary,detail);
+		facesContext.addMessage(component.getClientId(), facesMessage);
 	}
-	
+
 	private static void removeExistingMessages(FacesContext facesContext) {
 		// remove existing messages
 		Iterator<FacesMessage> i = facesContext.getMessages();

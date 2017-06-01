@@ -39,7 +39,7 @@ public class PersonaBean implements Serializable {
 
 	@EJB
 	PersonaService personaService;
-	
+
 	@EJB
 	TipoDocumentoService tipoDocumentoService;
 
@@ -70,7 +70,7 @@ public class PersonaBean implements Serializable {
 		this.visibleDelete = false;
 		this.ver = false;
 		this.listaTipoDocumento = null;
-		
+
 		this.persona = new Persona();
 		this.persona.setNombre("");
 		this.persona.setCostoHora(0);
@@ -88,7 +88,7 @@ public class PersonaBean implements Serializable {
 		this.persona.setFechaUltimoCambio(new Date());
 		this.persona.setEstado(Constantes.ESTADO_ACTIVO);
 		this.persona.setEditable(true);
-		
+
 		logger.info("TIPO DOC: " + this.persona.getTipoDocumento());
 	}
 
@@ -99,7 +99,7 @@ public class PersonaBean implements Serializable {
 	private void closedPopup() {
 		this.visiblePopup = false;
 	}
-	
+
 	public List<TipoDocumento> getTipoDocumentoAll() {
 		this.listaTipoDocumento = tipoDocumentoService.getAll();
 		return this.listaTipoDocumento;
@@ -142,17 +142,18 @@ public class PersonaBean implements Serializable {
 
 	public String saveAction(ActionEvent event) {
 		logger.info("Entró a saveAction(ActionEvent event)");
-        
+
 		if (validateSaveAction(event)) {
 			try {
-								
+
 				this.persona.setTipoDocumento(tipoDocumentoService.getById(this.persona.getTipoDocumento().getId()));
 				personaService.save(this.persona);
 				this.getPersonaAll();
+				FacesUtils.addMessageError(event, "Guardado con éxito", "");
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Guardar Persona", "Error al guardar la persona", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al guardar la persona", e.getMessage());
 				logger.error("Error al guardar persona. "+e.getMessage());
 			}
 		}
@@ -163,75 +164,58 @@ public class PersonaBean implements Serializable {
 
 	private boolean validateSaveAction(ActionEvent event) {
 		logger.info("Entró a validateSaveAction()");
-		
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-        
-        // remove existing messages
-        Iterator<FacesMessage> i = facesContext.getMessages();
-        while (i.hasNext()) {
-            i.next();
-            i.remove();
-        }
-		
+
 		boolean valid = true;
 		String detail = "";
 
 		if (this.persona == null) {
-			detail = "No existe un objeto PERSONA inicializado";
+			FacesUtils.addMessageError(event, "No existe un objeto PERSONA inicializado", "");
 			valid = false;
 
-		} else if (StringUtils.isBlank(this.persona.getNombre())) {
-			detail = "Se debe ingresar el nombre de la persona";	
+		} if (StringUtils.isBlank(this.persona.getNombre())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar el nombre de la persona", "");
 			valid = false;
-			
-		} else if (persona.getCostoHora() == 0) {
-			detail = "Se debe ingresar un costo de hora";
+
+		} if (persona.getCostoHora() == 0) {
+			FacesUtils.addMessageError(event, "Se debe ingresar un costo de hora", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(this.persona.getCargo())) {
-			detail = "Se debe ingresar un cargo";
+
+		} if (StringUtils.isBlank(this.persona.getCargo())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar un cargo", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(this.persona.getTelefono())) {
-			detail = "Se debe ingresar un teléfono";
+
+		} if (StringUtils.isBlank(this.persona.getTelefono())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar un teléfono", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(persona.getDireccion())) {
-			detail = "Se debe ingresar una dirección";
+
+		} if (StringUtils.isBlank(persona.getDireccion())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar una dirección", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(persona.getEmail())) {
-			detail = "Se debe ingresar un correo electrónico";
+
+		} if (StringUtils.isBlank(persona.getEmail())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar un correo electrónico", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(persona.getIdentificacion())) {
-			detail = "Se debe ingresar una identificación";
+
+		} if (this.persona.getTipoDocumento() == null || this.persona.getTipoDocumento().getId() == null) {
+			FacesUtils.addMessageError(event, "Se debe ingresar el tipo del documento", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(persona.getIdentificacion())) {
-			detail = "Se debe ingresar una identificación";
+
+		} if (StringUtils.isBlank(persona.getIdentificacion())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar un número de identificación", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(persona.getNombreContactoEmergencia())) {
-			detail = "Se debe ingresar un nombre de contacto de emergencia";
+
+		} if (StringUtils.isBlank(persona.getNombreContactoEmergencia())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar un nombre de contacto de emergencia", "");
 			valid = false;
-			
-		} else if (StringUtils.isBlank(persona.getTelefonoContactoEmergencia())) {
-			detail = "Se debe ingresar un teléfono de contacto de emergencia";
-			valid = false;
-			
-		} else if (this.persona.getTipoDocumento() == null || this.persona.getTipoDocumento().getId() == null) {
-			detail = "Se debe ingresar el tipo del documento";	
+
+		} if (StringUtils.isBlank(persona.getTelefonoContactoEmergencia())) {
+			FacesUtils.addMessageError(event, "Se debe ingresar un teléfono de contacto de emergencia", "");
 			valid = false;
 		}
 
-		if (!valid) {			
-			FacesUtils.addMessageError("Guardar Persona", "Error al guardar la persona", detail);
+		if (!valid) {
+			FacesUtils.addMessageError(event, "Error al guardar la persona", detail);
 			logger.error("Error validando la persona a guardar. "+detail);
-			
-			UIComponent component = event.getComponent();
-	        FacesMessage facesMessage = new FacesMessage((FacesMessage.Severity) FacesMessage.VALUES.get(2), detail, detail);
-	        facesContext.addMessage(component.getClientId(), facesMessage);
 		}
 		logger.info("Saliendo de validateSaveAction()");
 		return valid;
@@ -246,13 +230,13 @@ public class PersonaBean implements Serializable {
         }
         if (tmpComponent != null && (tmpComponent instanceof UIData)) {
             Object tmpRowData = ((UIData) tmpComponent).getRowData();
-            
+
             if (tmpRowData instanceof Persona) {
             	this.persona = (Persona) tmpRowData;
             	this.persona.setFechaUltimoCambio(new Date());
             	this.persona.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
-            
+
         }
 
 		this.headerDialog = "Editar Persona";
@@ -281,14 +265,14 @@ public class PersonaBean implements Serializable {
             	this.persona.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
             }
         }
-        
-        
+
+
         this.visibleEdit = false;
         this.visibleView = true;
         this.visibleDelete = true;
         this.headerDialog = "Eliminar Persona";
         this.openPopup();
-        
+
 		logger.info("Saliendo de deletePersona(persona:" + persona + ")");
 
 	}
@@ -306,7 +290,7 @@ public class PersonaBean implements Serializable {
             	this.persona = (Persona) tmpRowData;
             }
         }
-        
+
         this.ver = true;
         this.visibleEdit = true;
         this.visibleView = false;
@@ -331,7 +315,7 @@ public class PersonaBean implements Serializable {
 			this.closedPopup();
 
 		} catch (Exception e) {
-			FacesUtils.addMessageError("Eliminar Persona", "Error al eliminar la persona", e.getMessage());
+			FacesUtils.addMessageError(event, "Error al eliminar la persona", e.getMessage());
 			logger.error("Error al eliminar persona. "+e.getMessage());
 		}
 
@@ -351,7 +335,7 @@ public class PersonaBean implements Serializable {
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Ver Persona", "Error al ver la persona", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al ver la persona", e.getMessage());
 				logger.error("Error al ver persona. "+e.getMessage());
 			}
 		}
@@ -361,7 +345,7 @@ public class PersonaBean implements Serializable {
 	}
 
 	public List<SelectItem> getListSelectItem(){
-		
+
 		this.getTipoDocumentoAll();
 
 		this.listSelectItem = new ArrayList<SelectItem>();
@@ -383,7 +367,7 @@ public class PersonaBean implements Serializable {
 		logger.info("Saliendo de cancelAction()");
 		return PAGE_NAME;
 	}
-	
+
 	public boolean isVer() {
 		return ver;
 	}
@@ -415,7 +399,7 @@ public class PersonaBean implements Serializable {
 	public void setVisiblePopup(boolean visiblePopup) {
 		this.visiblePopup = visiblePopup;
 	}
-	
+
 	public String getNombrePersona(){
 		String nombre = "";
 		if(this.persona != null){
@@ -429,7 +413,7 @@ public class PersonaBean implements Serializable {
 		if(this.persona != null){
 			this.persona.setNombre(nombre);
 		}
-	}	
+	}
 
 	/*
      *  if closing with a client side api, ensure a listener is used to
@@ -438,7 +422,7 @@ public class PersonaBean implements Serializable {
     public void closeFAjax(AjaxBehaviorEvent event){
         this.visiblePopup = false;
         this.visibleEdit = false;
-    }   
+    }
 
     public int getCostoHoraPersona(){
 		int costoHora = 0;
@@ -454,7 +438,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setCostoHora(costoHora);
 		}
 	}
-	
+
 	public String getCargoPersona(){
 		String cargo = "";
 		if(this.persona != null){
@@ -469,7 +453,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setCargo(cargo);
 		}
 	}
-	
+
 	public String getTelefonoPersona(){
 		String telefono = "";
 		if(this.persona != null){
@@ -484,7 +468,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setTelefono(telefono);
 		}
 	}
-	
+
 	public String getDireccionPersona(){
 		String direccion = "";
 		if(this.persona != null){
@@ -499,7 +483,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setDireccion(direccion);
 		}
 	}
-	
+
 	public String getEmailPersona(){
 		String email = "";
 		if(this.persona != null){
@@ -514,7 +498,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setEmail(email);
 		}
 	}
-	
+
 	public String getIdentificacionPersona(){
 		String identificacion = "";
 		if(this.persona != null){
@@ -529,7 +513,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setIdentificacion(identificacion);
 		}
 	}
-	
+
 	public String getNombreContactoEmergenciaPersona(){
 		String nombreContacto = "";
 		if(this.persona != null){
@@ -544,7 +528,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setNombreContactoEmergencia(nombreContacto);
 		}
 	}
-	
+
 	public String getTelefonoContactoEmergenciaPersona(){
 		String telefonoContacto = "";
 		if(this.persona != null){
@@ -559,7 +543,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setTelefonoContactoEmergencia(telefonoContacto);
 		}
 	}
-	
+
 	public String getUsuarioCreacionPersona() {
 		String user = null;
 		if(this.persona != null){
@@ -574,7 +558,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setUsuarioCreacion(usuarioCreacion);
 		}
 	}
-	
+
 	public Date getFechaCreacionPersona() {
 		Date fechaCreacion = null;
 		if(this.persona != null){
@@ -583,7 +567,7 @@ public class PersonaBean implements Serializable {
 
 		return fechaCreacion;
 	}
-	
+
 	public void setFechaCreacionPersona(Date fechaCreacion) {
 		if(this.persona != null){
 			this.persona.setFechaCreacion(fechaCreacion);
@@ -604,7 +588,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setUsuarioUltimoCambio(usuarioUltimoCambio);
 		}
 	}
-	
+
 	public Date getFechaUltimoCambioPersona() {
 		Date fechaUltimoCambio = null;
 		if(this.persona != null){
@@ -619,7 +603,7 @@ public class PersonaBean implements Serializable {
 			this.persona.setFechaUltimoCambio(fechaUltimoCambio);
 		}
 	}
-	
+
 	public Integer getEstadoPersona() {
 		Integer estado = null;
 		if(this.persona != null){
@@ -628,7 +612,7 @@ public class PersonaBean implements Serializable {
 
 		return estado;
 	}
-	
+
 	public void setEstadoPersona(Integer estado) {
 		if(this.persona != null){
 			this.persona.setEstado(estado);
@@ -666,13 +650,13 @@ public class PersonaBean implements Serializable {
 	public void setVisibleView(boolean visibleView) {
 		this.visibleView = visibleView;
 	}
-	
+
 	public boolean isVisibleDelete() {
 		return visibleDelete;
 	}
 
 	public void setVisibleDelete(boolean visibleDelete) {
 		this.visibleDelete = visibleDelete;
-	}	
-	
+	}
+
 }

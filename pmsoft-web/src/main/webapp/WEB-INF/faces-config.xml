@@ -56,7 +56,15 @@
 			<navigation-case>
 				<from-action>gestionar_persona_recurso</from-action>
 				<to-view-id>/faces/pages/gestionar_persona_recurso.xhtml</to-view-id>
-			</navigation-case>	
+			</navigation-case>
+			<navigation-case>
+				<from-action>gestionar_observaciones</from-action>
+				<to-view-id>/faces/pages/gestionar_observaciones.xhtml</to-view-id>
+			</navigation-case>
+			<navigation-case>
+				<from-action>gestionar_historial_actividades</from-action>
+				<to-view-id>/faces/pages/gestionar_historial_actividades.xhtml</to-view-id>
+			</navigation-case>
 		</navigation-rule>
 
 	</application>
