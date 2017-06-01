@@ -1,0 +1,166 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+
+		<h:form id="form1" styleClass="contentFeature">
+
+			<ace:panel header="Gestionar Observaciones">
+
+				<h:panelGroup>
+
+					<ace:dataTable id="dataTableObservaciones" value="#{observacionBean.observacionAll}"
+						var="_item">
+
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="observacionId" value="#{_item.id}" />
+						</ace:column>
+
+						<ace:column id="descripcion">
+							<f:facet name="header">
+								<h:outputText value="Descripcion" />
+							</f:facet>
+							<h:outputText id="descripcionObservacion" value="#{_item.descripcion}" />
+						</ace:column>
+
+						<ace:column id="acciones">
+							<f:facet name="header">
+
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
+									actionListener="#{observacionBean.agregarObservacion}" type="button">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" actionListener="#{observacionBean.editarObservacion}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver"
+								rendered="true" actionListener="#{observacionBean.verObservacion}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								rendered="true"
+								type="button"
+								actionListener="#{observacionBean.eliminarObservacion}"
+								onclick="ice.ace.instance('#{confirm.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirm" binding="#{confirm}"
+                                    message="¿Está seguro que desea eliminar la observacion? La observacion pasará de un estado ACTIVO a un estado INACTIVO"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="yes" value="Si" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{observacionBean.deleteAction}">
+					                    </h:commandButton>
+					                    <h:commandButton id="no" value="No" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{observacionBean.popupClose()}">
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>
+					</ace:dataTable>
+				</h:panelGroup>
+			</ace:panel>
+		</h:form>
+
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos del Observacion -->
+				<ace:dialog id="dialogObservacion" visible="#{observacionBean.visiblePopup}"
+					closable="false" header="#{observacionBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+
+					<h:panelGrid>
+
+						<ace:textAreaEntry id="dialogDescripcionObservacion" value="#{observacionBean.descripcionObservacion}"
+							label="Descripcion: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{observacionBean.visibleEdit}" rendered="#{!observacionBean.visibleDelete}">
+						</ace:textAreaEntry>
+
+						<ace:textEntry id="dialogEstadoObservacion" value="#{observacionBean.estadoObservacion}"
+							label="Estado Observacion: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{observacionBean.visibleEdit}"
+							rendered="#{!observacionBean.visibleView and !observacionBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaCreacionObservacion" value="#{observacionBean.fechaCreacionObservacion}"
+							label="Fecha de Creación " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{observacionBean.visibleEdit}"
+							rendered="#{!observacionBean.visibleView and !observacionBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioCreacionObservacion" value="#{observacionBean.usuarioCreacionObservacion}"
+							label="Usuario Creación " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{observacionBean.visibleEdit}"
+							rendered="#{!observacionBean.visibleView and !observacionBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaUltimoCambioObservacion" value="#{observacionBean.fechaUltimoCambioObservacion}"
+							label="Fecha Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{observacionBean.visibleEdit}"
+							rendered="#{!observacionBean.visibleView and !observacionBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioUltimoCambioObservacion" value="#{observacionBean.usuarioUltimoCambioObservacion}"
+							label="Usuario Último Cambio" labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{observacionBean.visibleEdit}"
+							rendered="#{!observacionBean.visibleView and !observacionBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:pushButton id="dialogObservacionBtnGuardar"
+							actionListener="#{observacionBean.saveAction}" label="Guardar" rendered="#{!observacionBean.visibleEdit and !observacionBean.visibleDelete}">
+						</ace:pushButton>
+
+						<ace:pushButton id="dialogObservacionBtnEliminar"
+ 							actionListener="#{observacionBean.deleteAction}" label="Eliminar" rendered="#{observacionBean.visibleDelete}">
+ 						</ace:pushButton>
+
+						<ace:pushButton id="dialogObservacionBtnCancelar"
+							actionListener="#{observacionBean.cancelAction}" label="Cancelar" rendered="#{!observacionBean.visibleEdit}">
+						</ace:pushButton>
+
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{observacionBean.popupClose}"
+                                             rendered="#{!observacionBean.visibleView}"/>
+                        </h:panelGroup>
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+			<ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""
+                               rendered="false"/>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

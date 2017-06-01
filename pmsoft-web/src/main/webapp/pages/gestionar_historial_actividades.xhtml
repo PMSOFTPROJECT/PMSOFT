@@ -1,0 +1,154 @@
+<ui:composition template="/resources/templates/home-template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:icecore="http://www.icefaces.org/icefaces/core"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+
+	<ui:define name="content">
+
+		<h:form id="form1" styleClass="contentFeature">
+
+			<ace:panel header="Gestionar Historial de las actividades">
+
+				<h:panelGroup>
+
+					<ace:dataTable id="dataTableHistorialActividad" value="#{historialActividadBean.historialActividadAll}"
+						var="_item">
+
+						<ace:column id="id">
+							<f:facet name="header">
+								<h:outputText value="ID" />
+							</f:facet>
+							<h:outputText id="historialActividadId" value="#{_item.id}" />
+						</ace:column>
+
+						<ace:column id="acciones">
+							<f:facet name="header">
+
+								<h:commandButton id="idBtnAdd" styleClass="btn_s_add"
+									actionListener="#{historialActividadBean.agregarHistorialActividad}" type="button">
+									<f:ajax execute="@this" render="@all" />
+								</h:commandButton>
+							</f:facet>
+
+							<h:commandButton id="idBtnEdit" styleClass="btn_s_editar"
+								rendered="#{_item.editable}" actionListener="#{historialActividadBean.editarHistorialActividad}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+
+						<ace:column id="ver">
+							<f:facet name="header">
+								<h:outputText value="Ver" />
+							</f:facet>
+							<h:commandButton id="idBtnVer" styleClass="btn_s_ver"
+								rendered="true" actionListener="#{historialActividadBean.verHistorialActividad}"
+								type="button">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+						</ace:column>
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								rendered="true"
+								type="button"
+								actionListener="#{historialActividadBean.eliminarHistorialActividad}"
+								onclick="ice.ace.instance('#{confirm.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirm" binding="#{confirm}"
+                                    message="¿Está seguro que desea eliminar el historial de la actividad? El historial de la actividad pasará de un estado ACTIVO a un estado INACTIVO"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="yes" value="Si" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{historialActividadBean.deleteAction}">
+					                    </h:commandButton>
+					                    <h:commandButton id="no" value="No" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{historialActividadBean.popupClose()}">
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>
+					</ace:dataTable>
+				</h:panelGroup>
+			</ace:panel>
+		</h:form>
+
+		<h:form id="formDialog">
+			<h:panelGroup>
+				<!-- Sección del Popup para capturar los datos del HistorialActividad -->
+				<ace:dialog id="dialogHistorialActividad" visible="#{historialActividadBean.visiblePopup}"
+					closable="false" header="#{historialActividadBean.headerDialog}" draggable="true"
+					modal="true" width="400">
+
+					<h:panelGrid>
+
+						<ace:textEntry id="dialogEstadoHistotiaActividad" value="#{historialActividadBean.estadoHistorialActividad}"
+							label="Estado del historial de la actividad: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{historialActividadBean.visibleEdit}"
+							rendered="#{!historialActividadBean.visibleView and !historialActividadBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaCreacionHistorialActividad" value="#{historialActividadBean.fechaCreacionHistorialActividad}"
+							label="Fecha de Creación " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{historialActividadBean.visibleEdit}"
+							rendered="#{!historialActividadBean.visibleView and !historialActividadBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioCreacionHistorialActividad" value="#{historialActividadBean.usuarioCreacionHistorialActividad}"
+							label="Usuario Creación " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{historialActividadBean.visibleEdit}"
+							rendered="#{!historialActividadBean.visibleView and !historialActividadBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogFechaUltimoCambioHistorialActividad" value="#{historialActividadBean.fechaUltimoCambioHistorialActividad}"
+							label="Fecha Último Cambio: " labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{historialActividadBean.visibleEdit}"
+							rendered="#{!historialActividadBean.visibleView and !historialActividadBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:textEntry id="dialogUsuarioUltimoCambioHistorialActividad" value="#{historialActividadBean.usuarioUltimoCambioHistorialActividad}"
+							label="Usuario Último Cambio" labelPosition="left" required="false"
+							requiredIndicator="(*)" readonly="#{historialActividadBean.visibleEdit}"
+							rendered="#{!historialActividadBean.visibleView and !historialActividadBean.visibleDelete}">
+						</ace:textEntry>
+
+						<ace:pushButton id="dialogHistorialActividadBtnGuardar"
+							actionListener="#{historialActividadBean.saveAction}" label="Guardar" rendered="#{!historialActividadBean.visibleEdit and !historialActividadBean.visibleDelete}">
+						</ace:pushButton>
+
+						<ace:pushButton id="dialogHistorialActividadBtnEliminar"
+ 							actionListener="#{historialActividadBean.deleteAction}" label="Eliminar" rendered="#{historialActividadBean.visibleDelete}">
+ 						</ace:pushButton>
+
+						<ace:pushButton id="dialogHistorialActividadBtnCancelar"
+							actionListener="#{historialActividadBean.cancelAction}" label="Cancelar" rendered="#{!historialActividadBean.visibleEdit}">
+						</ace:pushButton>
+
+						<h:panelGroup style="float: right;position:absolute;right:0;top:0;">
+                            <h:commandButton image="../img/btn_s_cancelar.png"
+                                             alt="Close" title="Close"
+                                             style="height: 11px; width: 11px; border: 0;"
+                                             actionListener="#{historialActividadBean.popupClose}"
+                                             rendered="#{!historialActividadBean.visibleView}"/>
+                        </h:panelGroup>
+					</h:panelGrid>
+				</ace:dialog>
+			</h:panelGroup>
+			<ace:growlMessages  id="allMsgsGrowl" autoHide="true"
+                                for="@inView"
+                               closeAll="true"
+                               maxVisibleMessages="0"
+                               position="top-right" header=""
+                               rendered="false"/>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
