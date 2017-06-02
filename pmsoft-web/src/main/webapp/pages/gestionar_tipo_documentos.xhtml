@@ -56,6 +56,32 @@
 								<f:ajax execute="@this" render="@all" />
 							</h:commandButton>
 						</ace:column>
+						<ace:column id="eliminar">
+							<f:facet name="header">
+								<h:outputText value="Eliminar" />
+							</f:facet>
+							<h:commandButton id="idBtnEliminar" styleClass="btn_s_eliminar"
+								rendered="true"
+								type="button"
+								actionListener="#{tipoDocumentoBean.eliminarTipoDocumento}"
+								onclick="ice.ace.instance('#{confirm.clientId}').show();return false;">
+								<f:ajax execute="@this" render="@all" />
+							</h:commandButton>
+							<ace:confirmationDialog id="confirm" binding="#{confirm}"
+                                    message="¿Está seguro que desea eliminar el tipo de documento? El tipo de documento pasará de un estado ACTIVO a un estado INACTIVO"
+                                    header="Confirmación"
+                                    width="500"
+                                    height="150"
+                                    closable="true"
+                                    position="center">
+                                    <h:panelGrid columns="1" styleClass="centeredPanelGrid">
+				                    	<h:commandButton id="yes" value="Si" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{tipoDocumentoBean.deleteAction}">
+					                    </h:commandButton>
+					                    <h:commandButton id="no" value="No" onclick="ice.ace.instance('#{confirm.clientId}').hide();" actionListener="#{tipoDocumentoBean.popupClose()}">
+					                    </h:commandButton>
+				                	</h:panelGrid>
+							</ace:confirmationDialog>
+						</ace:column>
 					</ace:dataTable>
 				</h:panelGroup>
 			</ace:panel>

@@ -205,6 +205,47 @@ public class TipoDocumentoBean implements Serializable {
 	public void popupClose() {
 		this.visiblePopup = false;
 	}
+	
+	
+	 public void eliminarTipoDocumento(ActionEvent event) {
+			logger.info("Entro a deleteProject(event:" + event + ")");
+
+	        UIComponent tmpComponent = event.getComponent();
+	        while (null != tmpComponent && !(tmpComponent instanceof UIData)) {
+	            tmpComponent = tmpComponent.getParent();
+	        }
+	        if (tmpComponent != null && (tmpComponent instanceof UIData)) {
+	            Object tmpRowData = ((UIData) tmpComponent).getRowData();
+	            if (tmpRowData instanceof TipoDocumento) {
+	            	this.tipoDocumento = (TipoDocumento) tmpRowData;
+	            	this.tipoDocumento.setFechaUltimoCambio(new Date());
+	            	this.tipoDocumento.setUsuarioUltimoCambio(this.getSessionBean().getNombreCompletoUsuario());
+	            }
+	        }
+
+	        this.closedPopup();
+
+			logger.info("Saliendo de deleteProject(project:" + tipoDocumento + ")");
+
+		}
+
+		public String deleteAction(ActionEvent event) {
+			logger.info("Entró a deleteAction(ActionEvent event)");
+
+			try {
+				tipoDocumentoService.delete(this.tipoDocumento);
+				this.getTipoDocumentoAll();
+				FacesUtils.addMessageInfo(event, "El tipo de documento fue cambiado a estado de inactividad","");
+				this.closedPopup();
+
+			} catch (Exception e) {
+				FacesUtils.addMessageError(event, "Error al eliminar el tipo de documento", e.getMessage());
+				logger.error("Error al eliminar el tipo de documento. "+e.getMessage());
+			}
+
+			logger.info("Saliendo de deleteAction()");
+			return PAGE_NAME;
+		}
 
 
 	public String viewAction(ActionEvent event) {
