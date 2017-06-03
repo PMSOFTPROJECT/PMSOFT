@@ -113,7 +113,7 @@ public class DocumentoBean implements Serializable {
 				this.closedPopup();					
 				
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Guardar Documento", "Error al guardar el documento", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al guardar el documento", e.getMessage());
 				logger.error("Error al guardar documento. "+e.getMessage());
 			}
 		}
@@ -156,7 +156,7 @@ public class DocumentoBean implements Serializable {
 		} 
 
 		if (!valid) {			
-			FacesUtils.addMessageError("Guardar documento", "Error al guardar documento", detail);
+			FacesUtils.addMessageError(event, "Error al guardar documento", detail);
 			logger.error("Error validando el documento a guardar. "+detail);
 			
 			UIComponent component = event.getComponent();
@@ -176,7 +176,7 @@ public class DocumentoBean implements Serializable {
 			this.closedPopup();
 
 		} catch (Exception e) {
-			FacesUtils.addMessageError("Eliminar Documento", "Error al eliminar el documento", e.getMessage());
+			FacesUtils.addMessageError(event, "Error al eliminar el documento", e.getMessage());
 			logger.error("Error al eliminar documento. "+e.getMessage());
 		}
 
@@ -281,7 +281,7 @@ public class DocumentoBean implements Serializable {
 				this.closedPopup();
 
 			} catch (Exception e) {
-				FacesUtils.addMessageError("Ver Documento", "Error al ver Documento", e.getMessage());
+				FacesUtils.addMessageError(event, "Error al ver Documento", e.getMessage());
 				logger.error("Error al ver Documento. "+e.getMessage());
 			}
 		}
